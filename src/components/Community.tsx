@@ -27,12 +27,16 @@ export default function Community() {
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
 
-        // Parallax Masonry Effect
-        if (window.innerWidth > 768) {
+        const mm = gsap.matchMedia();
+
+        mm.add("(min-width: 769px)", () => {
+            // Desktop Parallax
             gsap.to(col1Ref.current, { y: -100, ease: "none", scrollTrigger: { trigger: containerRef.current, scrub: 1 } });
             gsap.to(col2Ref.current, { y: 100, ease: "none", scrollTrigger: { trigger: containerRef.current, scrub: 1 } });
             gsap.to(col3Ref.current, { y: -50, ease: "none", scrollTrigger: { trigger: containerRef.current, scrub: 1 } });
-        }
+        });
+
+        return () => mm.revert();
     }, []);
 
     return (
@@ -80,11 +84,15 @@ function LookbookItem({ item }: { item: any }) {
                 src={item.src}
                 alt={item.quote}
                 fill
-                className="object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105"
+                className="object-cover transition-all duration-700 grayscale-0 md:grayscale md:group-hover:grayscale-0 group-hover:scale-105"
             />
 
-            {/* Minimal Overlay */}
-            <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex flex-col items-start justify-end translate-y-4 group-hover:translate-y-0 duration-500 ease-out">
+            {/* Minimal Overlay - Always visible on mobile, hover on desktop */}
+            <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent flex flex-col items-start justify-end duration-500 ease-out
+                opacity-100 translate-y-0
+                md:opacity-0 md:translate-y-4 
+                md:group-hover:opacity-100 md:group-hover:translate-y-0
+            ">
                 <p className="font-display text-2xl uppercase italic text-white leading-none">"{item.quote}"</p>
                 <div className="mt-4 flex items-center gap-2">
                     <span className="h-[1px] w-8 bg-white/50"></span>
@@ -92,8 +100,8 @@ function LookbookItem({ item }: { item: any }) {
                 </div>
             </div>
 
-            {/* Hover Cursor Effect (Optional, simulated with CSS) */}
-            <div className="absolute top-4 right-4 h-2 w-2 rounded-full bg-white opacity-0 group-hover:opacity-100 animate-pulse"></div>
+            {/* Hover Cursor Effect (Optional, simulated with CSS) - Desktop only */}
+            <div className="hidden md:block absolute top-4 right-4 h-2 w-2 rounded-full bg-white opacity-0 group-hover:opacity-100 animate-pulse"></div>
         </div>
     )
 }

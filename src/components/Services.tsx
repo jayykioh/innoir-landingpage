@@ -51,31 +51,49 @@ export default function Services() {
                     {SERVICES.map((item, index) => (
                         <div
                             key={item.id}
-                            className="group relative flex items-center justify-between border-b border-white/20 py-8 transition-colors hover:bg-white/5 cursor-pointer"
+                            className="group relative flex flex-col border-b border-white/20 transition-colors cursor-pointer"
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
+                            onClick={() => setHoveredIndex(hoveredIndex === index ? null : index)} // Mobile Toggle
                         >
-                            {/* Left: Count & Title */}
-                            <div className="flex items-center gap-6 md:gap-16 w-full relative z-10">
-                                <span className="font-mono text-xs md:text-sm text-gray-500 w-8">{item.count}</span>
+                            <div className="flex items-center justify-between py-8">
+                                {/* Left: Count & Title */}
+                                <div className="flex items-center gap-6 md:gap-16 w-full relative z-10">
+                                    <span className="font-mono text-xs md:text-sm text-gray-500 w-8">{item.count}</span>
 
-                                {/* Title with Outline Effect */}
-                                <h3 className="text-5xl md:text-8xl font-display font-black uppercase transition-all duration-300
-                  text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.8)] 
-                  md:group-hover:text-white md:group-hover:[-webkit-text-stroke:0px] md:group-hover:translate-x-4
-                  text-white md:[text-shadow:none] 
-                  max-md:text-white max-md:[-webkit-text-stroke:0px]
-                ">
-                                    {item.title}
-                                </h3>
+                                    {/* Title: Solid White on Mobile, Outline-to-Solid on Desktop */}
+                                    <h3 className={`text-5xl md:text-8xl font-display font-black uppercase transition-all duration-300
+                                        text-white md:text-transparent md:[-webkit-text-stroke:1px_rgba(255,255,255,0.8)] 
+                                        md:group-hover:text-white md:group-hover:[-webkit-text-stroke:0px] md:group-hover:translate-x-4
+                                        ${hoveredIndex === index ? 'translate-x-4' : ''}
+                                    `}>
+                                        {item.title}
+                                    </h3>
+                                </div>
+
+                                {/* Right: Metadata & Icon */}
+                                <div className="flex items-center gap-6 md:gap-12 relative z-10">
+                                    <span className="font-mono text-xs text-gray-500 hidden md:block">{item.season}</span>
+                                    <div className="relative overflow-hidden">
+                                        <ArrowUpRight className={`h-8 w-8 md:h-12 md:w-12 text-white transition-transform duration-300 ${hoveredIndex === index ? 'rotate-45 md:rotate-0 md:-translate-y-full md:translate-x-full' : ''}`} />
+                                    </div>
+                                </div>
                             </div>
 
-                            {/* Right: Metadata & Icon */}
-                            <div className="flex items-center gap-6 md:gap-12 relative z-10">
-                                <span className="font-mono text-xs text-gray-500 hidden md:block">{item.season}</span>
-                                <div className="relative overflow-hidden">
-                                    <ArrowUpRight className="h-8 w-8 md:h-12 md:w-12 text-white transition-transform duration-300 md:group-hover:-translate-y-full md:group-hover:translate-x-full" />
-                                    <ArrowUpRight className="absolute top-0 left-0 h-8 w-8 md:h-12 md:w-12 text-white -translate-x-full translate-y-full transition-transform duration-300 md:group-hover:translate-x-0 md:group-hover:translate-y-0" />
+                            {/* Mobile Accordion Content */}
+                            <div className={`overflow-hidden transition-all duration-500 md:hidden ${hoveredIndex === index ? 'max-h-[500px] mb-8' : 'max-h-0'}`}>
+                                <div className="relative w-full aspect-square">
+                                    <Image
+                                        src={item.src}
+                                        alt={item.title}
+                                        fill
+                                        className="object-cover grayscale contrast-125"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <button className="bg-white text-black font-display font-bold uppercase px-8 py-3 tracking-wider">
+                                            Shop Now
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +101,7 @@ export default function Services() {
                 </div>
             </div>
 
-            {/* Floating Image Portal */}
+            {/* Desktop Floating Image Portal */}
             <motion.div
                 style={{ x, y, rotate }}
                 className="pointer-events-none fixed top-0 left-0 z-50 h-[300px] w-[250px] md:h-[400px] md:w-[320px] overflow-hidden rounded-lg hidden md:block mix-blend-difference"

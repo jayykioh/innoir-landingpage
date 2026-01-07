@@ -64,22 +64,22 @@ export default function Hero() {
     return (
         <section
             ref={containerRef}
-            className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-background pt-20"
+            className="relative w-full h-[100dvh] flex items-center justify-center overflow-hidden bg-background pt-20"
         >
-            {/* Layer 1: Massive Text */}
+            {/* Layer 1: Massive Text (Mobile: Top z-20, Desktop: Behind z-0) */}
             <div
                 ref={textRef}
-                className="absolute z-0 w-full text-center"
+                className="absolute z-20 md:z-0 w-full text-center pointer-events-none"
             >
-                <h1 className="text-[15vw] leading-none font-display font-black tracking-tighter text-white opacity-20 md:opacity-100 mix-blend-difference">
+                <h1 className="text-[18vw] md:text-[15vw] leading-[0.9] font-display font-black tracking-tighter text-white mix-blend-difference">
                     INNOIR
                 </h1>
             </div>
 
-            {/* Layer 2: Image */}
+            {/* Layer 2: Image (Mobile: Opacity 50%, Desktop: Full) */}
             <div
                 ref={imageRef}
-                className="relative z-10 w-[80vw] md:w-[35vw] aspect-[3/4] grayscale contrast-125"
+                className="relative z-0 md:z-10 w-[90vw] md:w-[35vw] aspect-[3/4] grayscale contrast-125 opacity-50 md:opacity-100"
             >
                 <Image
                     src="/photo/owner.jpg"
