@@ -1,42 +1,71 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import "tailwindcss";
+
+@theme {
+    --color-background: #050505;
+    --color-foreground: #ffffff;
+
+    --font-sans: var(--font-inter), sans-serif;
+    --font-display: var(--font-syne), sans-serif;
+
+    --animate-marquee: marquee 25s linear infinite;
+    --animate-marquee-reverse: marquee-reverse 25s linear infinite;
+
+    @keyframes marquee {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes marquee-reverse {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+/* Custom Utilities for "Modern Swiss" Grid */
+.border-grid {
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.border-grid-t {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.border-grid-b {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.border-grid-l {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.border-grid-r {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
