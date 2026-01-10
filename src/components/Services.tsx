@@ -85,7 +85,7 @@ export default function Services() {
                                 <div className="relative w-full aspect-square">
                                     <Image
                                         src={item.src}
-                                        alt={item.title}
+                                        alt={`INNOIR Collection - ${item.title}`}
                                         fill
                                         className="object-cover grayscale contrast-125"
                                     />
@@ -116,7 +116,7 @@ export default function Services() {
                     >
                         <Image
                             src={SERVICES[hoveredIndex].src}
-                            alt={SERVICES[hoveredIndex].title}
+                            alt={`INNOIR Collection - ${SERVICES[hoveredIndex].title}`}
                             fill
                             className="object-cover grayscale contrast-125"
                         />

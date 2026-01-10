@@ -82,7 +82,7 @@ function LookbookItem({ item }: { item: any }) {
         <div className="group relative w-full aspect-[3/4] overflow-hidden bg-gray-900 border border-white/10 cursor-none">
             <Image
                 src={item.src}
-                alt={item.quote}
+                alt={`INNOIR Streetwear Community - ${item.quote}`}
                 fill
                 className="object-cover transition-all duration-700 grayscale-0 md:grayscale md:group-hover:grayscale-0 group-hover:scale-105"
             />

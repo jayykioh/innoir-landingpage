@@ -32,7 +32,7 @@ export default function About() {
                     <div className="text-lg md:text-xl text-gray-300 leading-relaxed font-sans min-h-[150px]">
                         <TextType
                             text={[
-                                "Born in the heart of An Thượng Night Market, INNOIR represents the raw, authentic energy of Da Nang's underground culture. Beyond our curated collections, we feature exclusive 1-of-1 custom pieces—shirts and pants hand-designed by our founder, Phu Nguyen. We blend luxury with the gritty reality of the streets."
+                                "Born in the heart of An Thượng Night Market, INNOIR represents the raw, authentic energy of Da Nang's underground culture. As a rising voice in Vietnam streetwear, we feature exclusive 1-of-1 custom pieces—shirts and pants hand-designed by our founder, Phu Nguyen. We blend luxury with the gritty reality of the streets."
                             ]}
                             typingSpeed={30}
                             cursorCharacter="_"

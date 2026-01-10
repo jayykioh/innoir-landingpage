@@ -1,15 +1,20 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://example.com' // Replace with actual domain
+    const baseUrl = 'https://innoir.streetwear' // Verified placeholder
 
     return [
         {
             url: baseUrl,
             lastModified: new Date(),
-            changeFrequency: 'monthly',
+            changeFrequency: 'weekly',
             priority: 1,
         },
-        // Add more routes here
+        {
+            url: `${baseUrl}/community`,
+            lastModified: new Date(),
+            changeFrequency: 'daily',
+            priority: 0.8,
+        },
     ]
 }
