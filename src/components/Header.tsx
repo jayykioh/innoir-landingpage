@@ -21,6 +21,7 @@ export default function Header() {
 
     const LINKS = [
         { href: "#works", label: "WORKS" },
+        { href: "/identity", label: "IDENTITY" },
         { href: "#community", label: "COMMUNITY" },
         { href: "#location", label: "LOCATION" },
         { href: "#contact", label: "CONTACT" },
@@ -30,7 +31,11 @@ export default function Header() {
         <>
             <header className="fixed top-0 left-0 z-50 w-full px-6 py-6 mix-blend-difference text-white">
                 <div className="flex items-center justify-between">
-                    <Link href="/" className="text-2xl font-bold tracking-tighter uppercase font-display relative z-50">
+                    <Link
+                        href="/"
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        className="text-2xl font-bold tracking-tighter uppercase font-display relative z-50 cursor-pointer"
+                    >
                         INNOIR
                     </Link>
 

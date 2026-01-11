@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -25,9 +25,6 @@ export default function Services() {
     const y = useSpring(mouseY, springConfig);
 
     // Velocity-based Rotation
-    // We need to track velocity manually or use useVelocity (but useVelocity needs a motion value changing over time)
-    // Simpler approach: Map x position to slight rotation based on screen center or movement
-    // For true velocity tilt, we can just use a transform of x
     const rotate = useTransform(x, [0, typeof window !== 'undefined' ? window.innerWidth : 1000], [-5, 5]);
 
     const handleMouseMove = (e: React.MouseEvent) => {
@@ -54,14 +51,13 @@ export default function Services() {
                             className="group relative flex flex-col border-b border-white/20 transition-colors cursor-pointer"
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
-                            onClick={() => setHoveredIndex(hoveredIndex === index ? null : index)} // Mobile Toggle
                         >
                             <div className="flex items-center justify-between py-8">
                                 {/* Left: Count & Title */}
                                 <div className="flex items-center gap-6 md:gap-16 w-full relative z-10">
                                     <span className="font-mono text-xs md:text-sm text-gray-500 w-8">{item.count}</span>
 
-                                    {/* Title: Solid White on Mobile, Outline-to-Solid on Desktop */}
+                                    {/* Title */}
                                     <h3 className={`text-5xl md:text-8xl font-display font-black uppercase transition-all duration-300
                                         text-white md:text-transparent md:[-webkit-text-stroke:1px_rgba(255,255,255,0.8)] 
                                         md:group-hover:text-white md:group-hover:[-webkit-text-stroke:0px] md:group-hover:translate-x-4
@@ -80,22 +76,7 @@ export default function Services() {
                                 </div>
                             </div>
 
-                            {/* Mobile Accordion Content */}
-                            <div className={`overflow-hidden transition-all duration-500 md:hidden ${hoveredIndex === index ? 'max-h-[500px] mb-8' : 'max-h-0'}`}>
-                                <div className="relative w-full aspect-square">
-                                    <Image
-                                        src={item.src}
-                                        alt={`INNOIR Collection - ${item.title}`}
-                                        fill
-                                        className="object-cover grayscale contrast-125"
-                                    />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <button className="bg-white text-black font-display font-bold uppercase px-8 py-3 tracking-wider">
-                                            Shop Now
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            {/* Mobile Content: Always Visible Image Stack */}
                         </div>
                     ))}
                 </div>
@@ -121,7 +102,6 @@ export default function Services() {
                             className="object-cover grayscale contrast-125"
                         />
 
-                        {/* Optional "Wow" Marquee inside image */}
                         <div className="absolute inset-x-0 bottom-4 overflow-hidden">
                             <div className="animate-marquee whitespace-nowrap text-[10px] font-mono font-bold uppercase text-white/80">
                                 View Collection — View Collection — View Collection — View Collection —

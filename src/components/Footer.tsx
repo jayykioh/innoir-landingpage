@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, MessageCircle, AtSign } from "lucide-react";
+import { Facebook, MessageCircle, AtSign, Instagram } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Footer() {
@@ -36,7 +36,7 @@ export default function Footer() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-xl font-display uppercase hover:text-gray-400 transition-colors"
                     >
-                        Instagram ↗
+                        <Instagram size={24} /> Instagram
                     </a>
 
                     <a

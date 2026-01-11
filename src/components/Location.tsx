@@ -1,43 +1,83 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
 export default function Location() {
     return (
-        <section className="relative w-full border-grid-b" id="location">
-            <div className="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
-                {/* Left: Info */}
-                <div className="p-8 md:p-16 border-grid-r border-b md:border-b-0 bg-background flex flex-col justify-between">
-                    <div>
-                        <h2 className="text-4xl font-display font-bold uppercase mb-8">Visit Us</h2>
-                        <div className="space-y-4 font-mono text-lg text-gray-300">
-                            <p>Night Market (Chợ đêm)</p>
-                            <p>An Thượng, Sơn Trà</p>
-                            <p>Da Nang 50000</p>
-                            <p>Vietnam</p>
-                        </div>
+        <section className="relative w-full bg-background text-white border-grid-b" id="location">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24 py-24 md:py-32">
+                    {/* Left: Sticky Details */}
+                    <div className="md:col-span-1">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="sticky top-32 flex flex-col justify-between h-full"
+                        >
+                            <div>
+                                <p className="font-sans text-xs uppercase tracking-[0.3em] text-white/50 mb-8">
+                                    Visit Us
+                                </p>
+                                <h2 className="text-5xl md:text-6xl font-display font-bold uppercase tracking-tighter mb-8 leading-[0.9]">
+                                    INNOIR<br />STORE
+                                </h2>
+
+                                <div className="space-y-6 font-sans text-sm text-gray-400">
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-white uppercase tracking-wider text-xs mb-1 font-bold">Address</span>
+                                        <p>Chợ đêm, An Thượng</p>
+                                        <p>Sơn Trà, Đà Nẵng</p>
+                                    </div>
+
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-white uppercase tracking-wider text-xs mb-1 font-bold">Hours</span>
+                                        <p>Mon - Sun</p>
+                                        <p>18:00 - 23:00</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Live Status Indicator */}
+                            <div className="mt-12 md:mt-24">
+                                <LiveStatus />
+                            </div>
+                        </motion.div>
                     </div>
 
-                    <div className="mt-12 space-y-2">
-                        <p className="font-display text-xl uppercase">Opening Hours</p>
-                        <div className="flex justify-between max-w-xs font-mono text-gray-400">
-                            <span>Mon - Sun</span>
-                            <span>18:00 - 23:00</span>
-                        </div>
+                    {/* Right: Map */}
+                    <div className="md:col-span-2 relative h-[500px] md:h-[600px] w-full rounded-2xl overflow-hidden grayscale invert hover:grayscale-0 hover:invert-0 transition-all duration-700 ease-in-out border border-white/10">
+                        <iframe
+                            src="https://maps.google.com/maps?q=INNOIR%20STREETWEAR%20Da%20Nang&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                            className="absolute inset-0 w-full h-full border-0"
+                            loading="lazy"
+                            allowFullScreen
+                            referrerPolicy="no-referrer-when-downgrade"
+                        />
+                        {/* Map Overlay to reduce contrast until hover */}
+                        <div className="absolute inset-0 bg-black/20 pointer-events-none group-hover:bg-transparent transition-colors" />
                     </div>
-                </div>
-
-                {/* Right: Map */}
-                <div className="relative w-full h-[400px] md:h-auto">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.110232675685!2d108.24146331485834!3d16.0597580888868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142177f2ced6d8b%3A0xeac35f2960ca74a4!2sAn%20Thuong%20Night%20Market!5e0!3m2!1sen!2s!4v1679000000000!5m2!1sen!2s"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen={true}
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                    />
                 </div>
             </div>
         </section>
+    );
+}
+
+function LiveStatus() {
+    // Forced Open Status as requested
+    const isOpen = true;
+
+    return (
+        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+            <span className="relative flex h-2.5 w-2.5">
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isOpen ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isOpen ? 'bg-green-500' : 'bg-red-500'}`}></span>
+            </span>
+            <span className="font-sans text-xs uppercase tracking-widest text-white/80 font-bold">
+                {isOpen ? 'Open Now' : 'Closed Now'}
+            </span>
+        </div>
     );
 }

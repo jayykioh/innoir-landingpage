@@ -18,11 +18,11 @@ const syne = Syne({
 export const metadata: Metadata = {
   title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
   description: "Discover INNOIR Streetwear, the premier local fashion brand in Da Nang, Vietnam. Authentic designs, premium quality, and the spirit of the night market. Est. 2025.",
-  keywords: ["streetwear Da Nang", "local brand Da Nang", "INNOIR", "Vietnam streetwear", "fashion Da Nang", "authentic streetwear", "night market fashion"],
+  keywords: ["streetwear Da Nang", 'innoir', 'innoir streetwear', "local brand Da Nang", "INNOIR", "Vietnam streetwear", "fashion Da Nang", "authentic streetwear", "night market fashion"],
   metadataBase: new URL("https://innoir.streetwear"), // Replace with actual domain when live
   openGraph: {
     title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
-    description: "Authentic Streetwear from Da Nang. Est. 2025. Redefining local fashion with bold designs and premium quality.",
+    description: "INNOIR: Authentic Streetwear from Da Nang. Est. 2025. Redefining local fashion with bold designs and premium quality.",
     siteName: "INNOIR",
     locale: "en_US",
     type: "website",

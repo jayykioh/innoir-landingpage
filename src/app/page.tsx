@@ -1,9 +1,11 @@
+import Link from "next/link";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import About from "@/components/About";
 import Community from "@/components/Community";
 import Services from "@/components/Services";
+import OrderingFAQ from "@/components/OrderingFAQ";
 import Location from "@/components/Location";
 import Footer from "@/components/Footer";
 
@@ -16,6 +18,7 @@ export default function Home() {
             <About />
             <Community />
             <Services />
+            <OrderingFAQ />
             <Location />
             <Footer />
         </main>
