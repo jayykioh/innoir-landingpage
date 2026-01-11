@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
             userAgent: '*',
             allow: '/',
         },
-        sitemap: 'https://innoir.streetwear/sitemap.xml',
+        sitemap: 'https://www.innoir.site/sitemap.xml',
     }
 }

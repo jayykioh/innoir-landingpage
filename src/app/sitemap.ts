@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://innoir.streetwear' // Verified placeholder
+    const baseUrl = 'https://www.innoir.site'
 
     return [
         {

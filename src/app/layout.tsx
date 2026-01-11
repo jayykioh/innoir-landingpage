@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
   description: "Discover INNOIR Streetwear, the premier local fashion brand in Da Nang, Vietnam. Authentic designs, premium quality, and the spirit of the night market. Est. 2025.",
   keywords: ["streetwear Da Nang", 'innoir', 'innoir streetwear', "local brand Da Nang", "INNOIR", "Vietnam streetwear", "fashion Da Nang", "authentic streetwear", "night market fashion"],
-  metadataBase: new URL("https://innoir.streetwear"), // Replace with actual domain when live
+  metadataBase: new URL("https://www.innoir.site"),
   openGraph: {
     title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
     description: "INNOIR: Authentic Streetwear from Da Nang. Est. 2025. Redefining local fashion with bold designs and premium quality.",
@@ -61,7 +61,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "INNOIR Streetwear",
-  "image": "https://innoir.streetwear/photo/owner.jpg",
+  "image": "https://www.innoir.site/photo/owner.jpg",
   "description": "Premier local streetwear brand in Da Nang, Vietnam.",
   "address": {
     "@type": "PostalAddress",
@@ -74,7 +74,7 @@ const jsonLd = {
     "latitude": 16.0544,
     "longitude": 108.2022
   },
-  "url": "https://innoir.streetwear",
+  "url": "https://www.innoir.site",
   "telephone": "+84905123456", // Placeholder, user can update
   "priceRange": "$$",
   "openingHoursSpecification": [
