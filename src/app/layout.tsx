@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Syne } from "next/font/google"; // Import Syne
+import { Inter, Syne, Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
 
@@ -12,6 +12,13 @@ const inter = Inter({
 const syne = Syne({
   subsets: ["latin"],
   variable: "--font-syne",
+  display: "swap",
+});
+
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-be-vietnam",
   display: "swap",
 });
 
@@ -105,7 +112,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${syne.variable}`}>
+    <html lang="en" className={`${inter.variable} ${syne.variable} ${beVietnamPro.variable}`}>
       <body className="bg-background text-foreground antialiased selection:bg-white selection:text-black">
         <script
           type="application/ld+json"

@@ -32,7 +32,8 @@ export default function About() {
                     <div className="text-lg md:text-xl text-gray-300 leading-relaxed font-sans min-h-[150px]">
                         <TextType
                             text={[
-                                "Born in the heart of An Thượng Night Market, INNOIR represents the raw, authentic energy of Da Nang's underground culture. As a rising voice in Vietnam streetwear, we feature exclusive 1-of-1 custom pieces—shirts and pants hand-designed by our founder, Phu Nguyen. We blend luxury with the gritty reality of the streets."
+                                "Founded at An Thượng Night Market, INNOIR began as a workshop of handcrafted garments rooted in the authentic street culture of Da Nang, created by our founder Phu.",
+                                "We have since expanded to a new facility and established a distinct brand identity. The brand is co founded by three partners, Phu, Tai and Luc, who continue to produce original designs and uphold rigorous craftsmanship."
                             ]}
                             typingSpeed={30}
                             cursorCharacter="_"
@@ -42,9 +43,11 @@ export default function About() {
                             cursorBlinkDuration={0.8}
                         />
                     </div>
-                    <div className="flex gap-4 pt-4">
-                        <span className="px-4 py-2 border border-white/20 rounded-full text-sm uppercase tracking-wider">Est. 2025</span>
-                        <span className="px-4 py-2 border border-white/20 rounded-full text-sm uppercase tracking-wider">Night Market</span>
+                    <div className="flex flex-wrap gap-4 pt-4">
+                        <span className="px-4 py-2 border border-white/20 rounded-full text-xs md:text-sm uppercase tracking-wider">Est. 2025</span>
+                        <span className="px-4 py-2 border border-white/20 rounded-full text-xs md:text-sm uppercase tracking-wider">Night Market</span>
+                        <span className="px-4 py-2 border border-white/20 rounded-full text-xs md:text-sm uppercase tracking-wider">EST. 2026</span>
+                        <span className="px-4 py-2 border border-white/20 rounded-full text-xs md:text-sm uppercase tracking-wider">D13 An Thuong 34</span>
                     </div>
                 </div>
             </div>

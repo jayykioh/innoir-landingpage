@@ -1,9 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Location() {
+    const mapRef = useRef<HTMLDivElement | null>(null);
+    const [selected, setSelected] = useState<'market' | 'd13'>('market');
+
+    const locations = {
+        market: {
+            title: 'INNOIR BRANCH 1',
+            lines: ['An Thuong Night Market', 'Son Tra, Da Nang'],
+            coords: { lat: 16.050444586344778, lng: 108.24812800183348 }
+        },
+        d13: {
+            title: 'INNOIR BRANCH 2',
+            lines: ['D13 An Thuong 34', 'Son Tra, Da Nang'],
+            coords: { lat: 16.04956116858136, lng: 108.24435253779995 }
+        }
+    } as const;
+
+    const selectedLocation = locations[selected];
     return (
         <section className="relative w-full bg-background text-white border-grid-b" id="location">
             <div className="container mx-auto px-4 md:px-6">
@@ -26,16 +43,52 @@ export default function Location() {
                                 </h2>
 
                                 <div className="space-y-6 font-sans text-sm text-gray-400">
-                                    <div className="flex flex-col gap-1">
-                                        <span className="text-white uppercase tracking-wider text-xs mb-1 font-bold">Address</span>
-                                        <p>Chợ đêm, An Thượng</p>
-                                        <p>Sơn Trà, Đà Nẵng</p>
+                                    <div>
+                                        <span className="text-white uppercase tracking-wider text-xs mb-2 font-bold">Locations</span>
+                                        <div className="flex flex-wrap gap-3 mt-2">
+                                            <button
+                                                onClick={() => setSelected('market')}
+                                                className={`px-3 py-2 rounded-full text-xs uppercase tracking-wider border ${selected === 'market' ? 'border-white bg-white/5' : 'border-white/10 text-white/80'}`}
+                                            >
+                                                {locations.market.title}
+                                            </button>
+
+                                            <button
+                                                onClick={() => setSelected('d13')}
+                                                className={`px-3 py-2 rounded-full text-xs uppercase tracking-wider border ${selected === 'd13' ? 'border-white bg-white/5' : 'border-white/10 text-white/80'}`}
+                                            >
+                                                {locations.d13.title}
+                                            </button>
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <span className="text-white uppercase tracking-wider text-xs mb-1 font-bold">Address</span>
+                                            <div className="mt-2 text-gray-200">
+                                                {selectedLocation.lines.map((l, i) => (
+                                                    <p key={i}>{l}</p>
+                                                ))}
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className="flex flex-col gap-1">
                                         <span className="text-white uppercase tracking-wider text-xs mb-1 font-bold">Hours</span>
                                         <p>Mon - Sun</p>
                                         <p>18:00 - 23:00</p>
+                                    </div>
+
+                                    <div className="pt-4">
+                                        <button
+                                            onClick={() => {
+                                                // Scroll to map and focus
+                                                if (mapRef.current) {
+                                                    mapRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                }
+                                            }}
+                                            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm uppercase tracking-wider"
+                                        >
+                                            View on map
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -48,9 +101,9 @@ export default function Location() {
                     </div>
 
                     {/* Right: Map */}
-                    <div className="md:col-span-2 relative h-[500px] md:h-[600px] w-full rounded-2xl overflow-hidden grayscale invert hover:grayscale-0 hover:invert-0 transition-all duration-700 ease-in-out border border-white/10">
+                    <div ref={mapRef} className="md:col-span-2 relative h-125 md:h-150 w-full rounded-2xl overflow-hidden grayscale invert hover:grayscale-0 hover:invert-0 transition-all duration-700 ease-in-out border border-white/10">
                         <iframe
-                            src="https://maps.google.com/maps?q=INNOIR%20STREETWEAR%20Da%20Nang&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                            src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedLocation.lines.join(", "))}&t=&z=17&ie=UTF8&iwloc=&output=embed`}
                             className="absolute inset-0 w-full h-full border-0"
                             loading="lazy"
                             allowFullScreen
