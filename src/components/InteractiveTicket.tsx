@@ -16,10 +16,15 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
 
   // Load RSVP state
   useEffect(() => {
+    document.body.style.overflowY = 'auto';
+    (document.body.style as any).webkitOverflowScrolling = 'touch';
+
     const saved = localStorage.getItem(`rsvp_${guestName}`);
     if (saved === 'confirmed') {
       Promise.resolve().then(() => setIsConfirmed(true));
     }
+
+    return () => { document.body.style.overflowY = ''; }
   }, [guestName]);
 
   // Framer Motion 3D Tilt Setup
@@ -183,7 +188,11 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
   const vnFont = { fontFamily: 'var(--font-be-vietnam), "Be Vietnam Pro", sans-serif' };
 
   return (
-    <div ref={containerRef} className="relative z-20 w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 perspective-[1000px]">
+    <div 
+      ref={containerRef} 
+      className="relative z-20 w-full min-h-[100dvh] flex flex-col items-center justify-start pt-20 pb-16 px-4 sm:justify-center sm:py-20 perspective-[1000px] overflow-y-auto"
+      style={{ WebkitOverflowScrolling: 'touch' } as any}
+    >
       
       {/* ── BACKGROUND VIDEO OVERLAY ── */}
       <video
@@ -207,7 +216,7 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
           rotateY,
           transformStyle: "preserve-3d"
         }}
-        className="relative w-full max-w-[800px] cursor-crosshair group"
+        className="relative w-full max-w-[800px] cursor-crosshair group touch-pan-y"
       >
         {/* Holographic Shine Overlay */}
         <motion.div 
@@ -241,7 +250,7 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
           )}
 
           {/* LEFT COLUMN (42%) */}
-          <div className="w-full md:w-[42%] min-w-0 flex-shrink-0 relative p-6 sm:p-8 md:p-6 lg:p-8 flex flex-col ticket-section">
+          <div className="w-full md:w-[42%] min-w-0 flex-shrink-0 relative p-4 sm:p-6 md:p-6 lg:p-8 flex flex-col ticket-section">
             {/* Far left ruled line */}
             <div className="absolute left-6 lg:left-8 top-0 bottom-0 w-[1px] bg-white/10 hidden md:block" />
             
@@ -260,13 +269,13 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
                 </p>
 
                 {/* Decorative Rule */}
-                <div className="w-full h-[1px] bg-white/15 my-6 lg:my-8 relative flex items-center justify-between">
+                <div className="w-full h-[1px] bg-white/15 my-3 sm:my-6 lg:my-8 relative flex items-center justify-between">
                   <div className={`w-1.5 h-1.5 rotate-45`} style={{ backgroundColor: accentColor }} />
                   <div className={`w-1.5 h-1.5 rotate-45`} style={{ backgroundColor: accentColor }} />
                 </div>
               </div>
 
-              <div className="mt-12 md:mt-auto min-w-0">
+              <div className="mt-4 sm:mt-12 md:mt-auto min-w-0">
                 <p className="font-mono text-[8px] sm:text-[9px] text-[#C0C0C0] tracking-[0.3em] uppercase mb-2">HONORED GUEST</p>
                 <p className="font-display italic text-2xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-4xl text-[#E8E8E8] tracking-tight truncate" style={vnFont} title={guestName}>
                   {guestName}
@@ -300,21 +309,21 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
           </div>
 
           {/* RIGHT COLUMN (58%) */}
-          <div className="w-full md:w-[58%] min-w-0 flex-grow relative p-6 sm:p-8 md:p-6 lg:p-8 flex flex-col justify-between ticket-section">
+          <div className="w-full md:w-[58%] min-w-0 flex-grow relative p-4 sm:p-6 md:p-6 lg:p-8 flex flex-col justify-between ticket-section">
             
             {/* Top: Date Block */}
             <div className="flex flex-col items-start md:items-end md:text-right min-w-0">
               <div className="flex flex-wrap items-baseline gap-1 sm:gap-2">
-                <span className="font-display font-black text-5xl sm:text-6xl md:text-5xl lg:text-5xl xl:text-6xl leading-none text-[#E8E8E8]">03</span>
+                <span className="font-display font-black text-4xl sm:text-5xl md:text-5xl lg:text-5xl xl:text-6xl leading-none text-[#E8E8E8]">03</span>
                 <span className="font-display font-light text-2xl sm:text-3xl md:text-2xl lg:text-3xl text-white/30">/</span>
-                <span className="font-display font-black text-5xl sm:text-6xl md:text-5xl lg:text-5xl xl:text-6xl leading-none text-[#E8E8E8]">JUN</span>
+                <span className="font-display font-black text-4xl sm:text-5xl md:text-5xl lg:text-5xl xl:text-6xl leading-none text-[#E8E8E8]">JUN</span>
               </div>
               <p className="font-mono text-[9px] sm:text-[10px] tracking-[0.25em] text-[#C0C0C0] uppercase mt-1 whitespace-nowrap">
                 TUESDAY &middot; 19:00 &middot; 2026
               </p>
             </div>
 
-            <div className="w-full h-[1px] bg-white/10 my-6 lg:my-8" />
+            <div className="w-full h-[1px] bg-white/10 my-3 sm:my-6 lg:my-8" />
 
             {/* Mid: Location */}
             <div className="flex flex-row justify-between items-center md:items-end gap-4 min-w-0">
@@ -334,13 +343,13 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
             </div>
 
             {/* Bottom: Quote */}
-            <div className="mt-8 md:mt-12 md:text-right min-w-0">
+            <div className="mt-4 sm:mt-8 md:mt-12 md:text-right min-w-0">
               <p className="font-sans font-light italic text-[11px] sm:text-[12px] md:text-[11px] lg:text-[12px] xl:text-[13px] text-white/50 leading-relaxed max-w-xs lg:max-w-sm md:ml-auto">
                 &ldquo;INNOIR is the brainchild of Phu, Luc, and Tai. Your presence is our absolute honor. We hope to see you there.&rdquo;
               </p>
             </div>
 
-            <div className="mt-8 md:mt-12 pt-4 lg:pt-5 border-t border-white/10 flex justify-between items-center font-mono text-[8px] tracking-[0.2em] text-[#C0C0C0] uppercase">
+            <div className="mt-4 sm:mt-8 md:mt-12 pt-3 sm:pt-4 lg:pt-5 border-t border-white/10 flex justify-between items-center font-mono text-[8px] tracking-[0.2em] text-[#C0C0C0] uppercase">
               <span>EST. 2025 // VN</span>
               <span>INVITATION ONLY</span>
             </div>
@@ -375,7 +384,7 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
       </motion.div>
 
       {/* ── ACTION BUTTONS (Below Card) ── */}
-      <div className="flex flex-col sm:flex-row gap-4 mt-12 ticket-section w-full max-w-[800px] justify-center px-4">
+      <div className="flex flex-col sm:flex-row gap-4 mt-6 sm:mt-12 ticket-section w-full max-w-[800px] justify-center px-4">
         <button 
           onClick={handleRSVP}
           disabled={isConfirmed}

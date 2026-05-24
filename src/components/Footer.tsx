@@ -75,7 +75,7 @@ export default function Footer() {
                     <motion.a
                         href="https://www.facebook.com/jeckyoh/"
                         target="_blank"
-                        className="text-white/60 hover:text-white transition-colors flex items-center gap-1"
+                        className="text-white/60 hover:text-white transition-colors flex items-center gap-1 font-mono text-[8px] sm:text-[9px] tracking-widest uppercase"
                         whileHover={{ scale: 1.05 }}
                         animate={{ opacity: [0.6, 1, 0.6] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
