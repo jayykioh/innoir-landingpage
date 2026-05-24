@@ -32,10 +32,22 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [8, -8]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [-12, 12]);
 
-  // Chrome shine gradient calculation
-  const shineOpacity = useTransform(mouseXSpring, [-0.5, 0.5], [0, 0.15]);
+  // Proper holographic shader simulation gradient calculations
+  const shineOpacity = useTransform(
+    [mouseXSpring, mouseYSpring],
+    ([xVal, yVal]) => {
+      const dist = Math.sqrt((xVal as number) ** 2 + (yVal as number) ** 2);
+      // Non-linear increase: more visible at extreme tilt
+      const opacity = 0.02 + 0.7 * (dist ** 2);
+      return Math.min(opacity, 0.35);
+    }
+  );
   const shineX = useTransform(mouseXSpring, [-0.5, 0.5], [0, 100]);
   const shineY = useTransform(mouseYSpring, [-0.5, 0.5], [0, 100]);
+  
+  // Rainbow iridescent shift (hue-rotate based on mouseX)
+  const hueRotate = useTransform(mouseXSpring, [-0.5, 0.5], [-180, 180]);
+  const hueRotateFilter = useTransform(hueRotate, (val) => `hue-rotate(${val}deg)`);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!ticketWrapperRef.current) return;
@@ -61,29 +73,39 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
 
     const tl = gsap.timeline();
 
-    // Phase 1: Enter
-    tl.from(ticketWrapperRef.current, {
-      opacity: 0,
-      y: 40,
-      rotateX: 8,
-      duration: 1.2,
-      ease: "power4.out"
-    });
+    // Phase 1: Enter from z-depth
+    tl.fromTo(ticketWrapperRef.current, 
+      {
+        scale: 0.7,
+        rotateX: 20,
+        opacity: 0,
+        y: 60
+      },
+      { 
+        scale: 1, 
+        rotateX: 0, 
+        opacity: 1, 
+        y: 0, 
+        duration: 1.4, 
+        ease: "power4.out",
+        clearProps: "scale,rotateX,y,transform"
+      }
+    );
 
-    // Phase 2: Stagger reveal
+    // Phase 2: Stagger reveal of .ticket-section elements
     tl.from('.ticket-section', {
       opacity: 0,
       y: 20,
       stagger: 0.12,
       duration: 0.8,
       ease: "power3.out"
-    }, "-=0.6");
+    }, "-=0.8");
 
     // Micro-interaction: Draw perforated line
     tl.fromTo('.perforated-line', 
-      { strokeDashoffset: 1000 },
-      { strokeDashoffset: 0, duration: 1.5, ease: "power2.out" },
-      "-=0.8"
+      { strokeDashoffset: 800 },
+      { strokeDashoffset: 0, duration: 1.2, ease: "power2.out" },
+      "-=1.0"
     );
 
     // Fade up rotated text
@@ -97,8 +119,10 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
     // If initially confirmed, show stamp immediately without anim
     if (isConfirmed) {
       gsap.set('.stamp-overlay', { scale: 1, rotation: -15, opacity: 1 });
+      gsap.set('.stamp-clip-circle', { attr: { r: 200 } });
     } else {
       gsap.set('.stamp-overlay', { scale: 0, rotation: -25, opacity: 0 });
+      gsap.set('.stamp-clip-circle', { attr: { r: 0 } });
     }
 
   }, { scope: containerRef, dependencies: [] });
@@ -106,19 +130,49 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
   const handleRSVP = () => {
     if (isConfirmed) return;
     
-    // Phase 4: Stamp Animation & Confetti
-    gsap.to('.rsvp-btn', { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+    // Phase 4: Stamp Animation & Confetti with rubber stamp physics
+    const stampTl = gsap.timeline();
     
-    gsap.fromTo('.stamp-overlay',
-      { scale: 0, rotation: -25, opacity: 0 },
-      { scale: 1, rotation: -15, opacity: 1, ease: "elastic.out(1, 0.5)", duration: 0.8 }
+    // 1. Stamp scales from 2.5→0.8 (fast drop, 0.15s, ease power3.in) — simulates stamp hitting paper.
+    stampTl.fromTo('.stamp-overlay',
+      { scale: 2.5, rotation: -25, opacity: 0 },
+      { 
+        scale: 0.8, 
+        rotation: -15, 
+        opacity: 1, 
+        duration: 0.15, 
+        ease: "power3.in",
+        onComplete: () => {
+          if (typeof window !== 'undefined') {
+            (window as any).triggerAudioCue?.('stamp');
+          }
+        }
+      }
+    );
+    
+    // 2. Then bounces to 1.0 (0.2s, ease elastic.out(2, 0.4)).
+    stampTl.to('.stamp-overlay', {
+      scale: 1.0,
+      duration: 0.2,
+      ease: "elastic.out(2, 0.4)"
+    });
+    
+    // 3. An ink spread effect: a circle clip-path expands from stamp center outward (clipPath scale 0→1.2, 0.3s)
+    stampTl.fromTo('.stamp-clip-circle',
+      { attr: { r: 0 } },
+      { attr: { r: 120 }, duration: 0.3, ease: "power2.out" },
+      "<" // Start at the same time as the bounce to 1.0 (contact moment)
     );
 
-    confetti({
-      particleCount: 80,
-      spread: 60,
-      colors: isVIP ? ['#FFD700', '#ffffff', '#22c55e'] : ['#22c55e', '#ffffff', '#10b981']
-    });
+    // 4. Confetti fires 80ms after stamp hits (the "splat" moment)
+    // The hit occurs at 0.15s, so 0.15s + 80ms = 230ms delay
+    setTimeout(() => {
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        colors: isVIP ? ['#FFD700', '#ffffff', '#22c55e'] : ['#22c55e', '#ffffff', '#10b981']
+      });
+    }, 230);
 
     setIsConfirmed(true);
     localStorage.setItem(`rsvp_${guestName}`, 'confirmed');
@@ -155,12 +209,24 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
         }}
         className="relative w-full max-w-[800px] cursor-crosshair group"
       >
-        {/* Chrome Shine Overlay */}
+        {/* Holographic Shine Overlay */}
         <motion.div 
-          className="absolute inset-0 z-50 pointer-events-none blend-overlay"
+          className="absolute inset-0 z-50 pointer-events-none"
           style={{
             opacity: shineOpacity,
-            background: `radial-gradient(circle at calc(${shineX}% ) calc(${shineY}% ), rgba(255,255,255,0.4) 0%, transparent 60%)`
+            filter: hueRotateFilter,
+            mixBlendMode: 'overlay',
+            background: `
+              radial-gradient(circle at calc(${shineX}% ) calc(${shineY}% ), rgba(255,255,255,0.12) 0%, transparent 60%),
+              linear-gradient(135deg, 
+                rgba(255, 0, 128, 0.25) 0%, 
+                rgba(255, 153, 0, 0.25) 20%, 
+                rgba(102, 255, 0, 0.25) 40%, 
+                rgba(0, 255, 255, 0.25) 60%, 
+                rgba(0, 51, 255, 0.25) 80%, 
+                rgba(153, 0, 255, 0.25) 100%
+              )
+            `
           }}
         />
 
@@ -211,9 +277,18 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
 
           {/* PERFORATED DIVIDER */}
           <div className="hidden md:block w-[1px] relative border-l border-dashed border-white/20">
-            {/* SVG line for animation fallback if needed, but CSS dashed border is cleaner. Let's use SVG for drawSVG animation as requested */}
             <svg className="absolute inset-0 w-[2px] h-full -ml-[1px]" preserveAspectRatio="none">
-              <line x1="1" y1="0" x2="1" y2="100%" className="perforated-line" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeDasharray="6 6" />
+              <line 
+                x1="1" 
+                y1="0" 
+                x2="1" 
+                y2="100%" 
+                className="perforated-line" 
+                stroke="rgba(255,255,255,0.4)" 
+                strokeWidth="2" 
+                strokeDasharray="8 6" 
+                strokeDashoffset="800" 
+              />
             </svg>
             <div className="absolute top-0 -left-2 w-4 h-4 rounded-full bg-black border-b border-white/20 -translate-y-1/2" />
             <div className="absolute bottom-0 -left-2 w-4 h-4 rounded-full bg-black border-t border-white/20 translate-y-1/2" />
@@ -242,12 +317,18 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
             <div className="w-full h-[1px] bg-white/10 my-6 lg:my-8" />
 
             {/* Mid: Location */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 min-w-0">
+            <div className="flex flex-row justify-between items-center md:items-end gap-4 min-w-0">
               <div className="min-w-0">
                 <p className="font-sans font-bold text-base sm:text-lg md:text-base lg:text-lg xl:text-xl text-[#E8E8E8] tracking-tight whitespace-nowrap">D13 AN THUONG 34</p>
                 <p className="font-mono text-[8px] sm:text-[9px] md:text-[8px] lg:text-[9px] tracking-widest text-[#C0C0C0] uppercase mt-1 whitespace-nowrap">NGU HANH SON &middot; DA NANG</p>
               </div>
-              <a href="https://maps.google.com" target="_blank" rel="noreferrer" className="text-[#C0C0C0] hover:text-white transition-colors flex-shrink-0">
+              <a 
+                href="https://maps.google.com" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="text-[#C0C0C0] hover:text-white hover:scale-110 active:scale-95 transition-all duration-200 flex-shrink-0 p-1 flex items-center justify-center rounded-full hover:bg-white/5"
+                aria-label="View location on Google Maps"
+              >
                 <MapPin size={22} strokeWidth={1.5} />
               </a>
             </div>
@@ -266,20 +347,27 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
 
           </div>
 
-          {/* GREEN CONFIRMED STAMP */}
+          {/* GREEN CONFIRMED STAMP WITH INK BLEED */}
           <div className="stamp-overlay absolute top-4 right-4 md:top-10 md:right-10 pointer-events-none z-20 mix-blend-screen opacity-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px]">
              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#22c55e" strokeWidth="4" strokeDasharray="4 2" />
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#22c55e" strokeWidth="2" />
-                <text x="50%" y="53%" dominantBaseline="middle" textAnchor="middle" fill="#22c55e" fontSize="24" fontFamily="sans-serif" fontWeight="900" letterSpacing="2">
-                  CONFIRMED
-                </text>
-                <path id="curve" fill="transparent" d="M 30,100 A 70,70 0 1,1 170,100 A 70,70 0 1,1 30,100" />
-                <text fill="#22c55e" fontSize="12" fontWeight="bold" letterSpacing="4">
-                  <textPath href="#curve" startOffset="50%" textAnchor="middle">
-                    INNOIR &middot; 03.06.2026 &middot; INNOIR &middot; 03.06.2026 &middot;
-                  </textPath>
-                </text>
+                <defs>
+                  <clipPath id="stamp-clip">
+                    <circle cx="100" cy="100" r="200" className="stamp-clip-circle" />
+                  </clipPath>
+                </defs>
+                <g clipPath="url(#stamp-clip)">
+                  <circle cx="100" cy="100" r="90" fill="none" stroke="#22c55e" strokeWidth="4" strokeDasharray="4 2" />
+                  <circle cx="100" cy="100" r="80" fill="none" stroke="#22c55e" strokeWidth="2" />
+                  <text x="50%" y="53%" dominantBaseline="middle" textAnchor="middle" fill="#22c55e" fontSize="24" fontFamily="sans-serif" fontWeight="900" letterSpacing="2">
+                    CONFIRMED
+                  </text>
+                  <path id="curve" fill="transparent" d="M 30,100 A 70,70 0 1,1 170,100 A 70,70 0 1,1 30,100" />
+                  <text fill="#22c55e" fontSize="12" fontWeight="bold" letterSpacing="4">
+                    <textPath href="#curve" startOffset="50%" textAnchor="middle">
+                      INNOIR &middot; 03.06.2026 &middot; INNOIR &middot; 03.06.2026 &middot;
+                    </textPath>
+                  </text>
+                </g>
              </svg>
           </div>
 
@@ -288,15 +376,25 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
 
       {/* ── ACTION BUTTONS (Below Card) ── */}
       <div className="flex flex-col sm:flex-row gap-4 mt-12 ticket-section w-full max-w-[800px] justify-center px-4">
-        {!isConfirmed && (
-          <button 
-            onClick={handleRSVP}
-            className="rsvp-btn w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 border border-white/20 text-[#E8E8E8] font-mono text-[10px] tracking-[0.2em] uppercase transition-all duration-200 hover:border-white hover:bg-white hover:text-black group"
-          >
-            <div className="w-2 h-2 rounded-full border border-current group-hover:bg-black transition-colors" />
-            CONFIRM PRESENCE
-          </button>
-        )}
+        <button 
+          onClick={handleRSVP}
+          disabled={isConfirmed}
+          className="rsvp-btn w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 border border-white/20 text-[#E8E8E8] font-mono text-[10px] tracking-[0.2em] uppercase relative overflow-hidden group transition-colors duration-300 disabled:pointer-events-none disabled:border-green-500/40 disabled:text-green-500"
+        >
+          {/* Underline progress on hover */}
+          <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white scale-x-0 origin-left transition-transform duration-200 group-hover:scale-x-100" />
+          
+          {/* Cross-fade text */}
+          <div className="relative h-4 w-40 flex items-center justify-center pointer-events-none">
+            <span className={`absolute transition-all duration-300 flex items-center gap-2 ${isConfirmed ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+              <span className="w-2 h-2 rounded-full border border-current" />
+              CONFIRM PRESENCE
+            </span>
+            <span className={`absolute transition-all duration-300 flex items-center gap-2 text-green-500 ${isConfirmed ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+              CONFIRMED ✓
+            </span>
+          </div>
+        </button>
         
         <div className="flex flex-row gap-4 w-full sm:w-auto">
           <a
