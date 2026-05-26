@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-export default function AtmosphereScene() {
+export default function AtmosphereScene({ isVIP = false }: { isVIP?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,9 +45,9 @@ export default function AtmosphereScene() {
     // Rectangular mesh representing clothing tags
     const geometry = new THREE.PlaneGeometry(0.3, 0.1); 
     const material = new THREE.MeshStandardMaterial({
-      color: 0xc0c0c0,
-      metalness: 0.8,
-      roughness: 0.2,
+      color: isVIP ? 0xd4af37 : 0xc0c0c0, // Premium gold if VIP, chrome/silver if not
+      metalness: isVIP ? 0.95 : 0.8,
+      roughness: isVIP ? 0.1 : 0.2,
       side: THREE.DoubleSide
     });
     
@@ -85,6 +85,38 @@ export default function AtmosphereScene() {
     }
     
     scene.add(instancedMesh);
+
+    // Micro-glitter/dust particles
+    const dustCount = 300;
+    const dustGeometry = new THREE.BufferGeometry();
+    const dustPositions = new Float32Array(dustCount * 3);
+    const dustSpeeds: { x: number, y: number, z: number }[] = [];
+
+    for (let i = 0; i < dustCount; i++) {
+      dustPositions[i * 3] = (Math.random() - 0.5) * 16;
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 16;
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 1; // Slightly closer to camera
+
+      dustSpeeds.push({
+        x: (Math.random() - 0.5) * 0.15,
+        y: (Math.random() * 0.2) + 0.1, // Drift up slowly
+        z: (Math.random() - 0.5) * 0.05
+      });
+    }
+
+    dustGeometry.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
+
+    const dustMaterial = new THREE.PointsMaterial({
+      color: isVIP ? 0xFFD700 : 0xffffff,
+      size: 0.04,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    const dustParticles = new THREE.Points(dustGeometry, dustMaterial);
+    scene.add(dustParticles);
 
     // Mouse Interaction
     let mouseX = 0;
@@ -140,6 +172,26 @@ export default function AtmosphereScene() {
         }
         instancedMesh.instanceMatrix.needsUpdate = true;
 
+        // Update glittering micro-dust particles
+        const posAttr = dustGeometry.attributes.position as THREE.BufferAttribute;
+        for (let i = 0; i < dustCount; i++) {
+          let px = posAttr.getX(i);
+          let py = posAttr.getY(i);
+          let pz = posAttr.getZ(i);
+
+          px += dustSpeeds[i].x * delta;
+          py += dustSpeeds[i].y * delta;
+          pz += dustSpeeds[i].z * delta;
+
+          // Wrap boundaries
+          if (py > 8) py = -8;
+          if (px > 8) px = -8;
+          else if (px < -8) px = 8;
+
+          posAttr.setXYZ(i, px, py, pz);
+        }
+        posAttr.needsUpdate = true;
+
         // Damped camera movement based on mouse
         targetX = mouseX * 2; // +/- 2 degrees approx mapping
         targetY = mouseY * 2;
@@ -174,6 +226,8 @@ export default function AtmosphereScene() {
       }
       geometry.dispose();
       material.dispose();
+      dustGeometry.dispose();
+      dustMaterial.dispose();
       renderer.dispose();
     };
   }, []);

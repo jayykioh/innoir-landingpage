@@ -186,7 +186,7 @@ export default function InvitationClient({ guestName, isVIP = false }: { guestNa
             transition={{ duration: 2.0, ease: "easeOut" }}
             className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0"
           >
-            <AtmosphereScene />
+            <AtmosphereScene isVIP={isVIP} />
           </motion.div>
         )}
 

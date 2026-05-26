@@ -3,11 +3,25 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import gsap from 'gsap';
+import { CustomEase } from 'gsap/CustomEase';
 import { useGSAP } from '@gsap/react';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(CustomEase);
+  CustomEase.create('heavyDrop', 'M0,0 C0.3,0 0.7,0.1 1,1');
+}
 import confetti from 'canvas-confetti';
 import { MapPin, Calendar, Copy } from 'lucide-react';
 
-export default function InteractiveTicket({ guestName, isVIP = false }: { guestName: string, isVIP?: boolean }) {
+export default function InteractiveTicket({ 
+  guestName, 
+  isVIP = false,
+  previewMode = false
+}: { 
+  guestName: string, 
+  isVIP?: boolean,
+  previewMode?: boolean
+}) {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [copied, setCopied] = useState(false);
   
@@ -16,6 +30,8 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
 
   // Load RSVP state
   useEffect(() => {
+    if (previewMode) return;
+
     document.body.style.overflowY = 'auto';
     (document.body.style as any).webkitOverflowScrolling = 'touch';
 
@@ -25,7 +41,7 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
     }
 
     return () => { document.body.style.overflowY = ''; }
-  }, [guestName]);
+  }, [guestName, previewMode]);
 
   // Framer Motion 3D Tilt Setup
   const x = useMotionValue(0);
@@ -146,7 +162,7 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
         rotation: -15, 
         opacity: 1, 
         duration: 0.15, 
-        ease: "power3.in",
+        ease: "heavyDrop",
         onComplete: () => {
           if (typeof window !== 'undefined') {
             (window as any).triggerAudioCue?.('stamp');
@@ -190,21 +206,29 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
   return (
     <div 
       ref={containerRef} 
-      className="relative z-20 w-full min-h-[100dvh] flex flex-col items-center justify-start pt-20 pb-16 px-4 sm:justify-center sm:py-20 perspective-[1000px] overflow-y-auto"
+      className={`relative z-20 w-full flex flex-col items-center justify-start px-4 perspective-[1000px] ${
+        previewMode 
+          ? 'h-auto py-4 justify-center overflow-visible' 
+          : 'min-h-[100dvh] pt-20 pb-16 sm:justify-center sm:py-20 overflow-y-auto'
+      }`}
       style={{ WebkitOverflowScrolling: 'touch' } as any}
     >
       
       {/* ── BACKGROUND VIDEO OVERLAY ── */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-[0.15] z-0 pointer-events-none mix-blend-screen"
-      >
-        <source src="/videos/grandopening.mp4" type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />
+      {!previewMode && (
+        <>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover opacity-[0.15] z-0 pointer-events-none mix-blend-screen"
+          >
+            <source src="/videos/grandopening.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />
+        </>
+      )}
 
       {/* ── 3D TILT WRAPPER ── */}
       <motion.div
@@ -214,7 +238,8 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
         style={{
           rotateX,
           rotateY,
-          transformStyle: "preserve-3d"
+          transformStyle: "preserve-3d",
+          willChange: "transform"
         }}
         className="relative w-full max-w-[800px] cursor-crosshair group touch-pan-y"
       >
@@ -357,7 +382,10 @@ export default function InteractiveTicket({ guestName, isVIP = false }: { guestN
           </div>
 
           {/* GREEN CONFIRMED STAMP WITH INK BLEED */}
-          <div className="stamp-overlay absolute top-4 right-4 md:top-10 md:right-10 pointer-events-none z-20 mix-blend-screen opacity-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px]">
+          <div 
+            className="stamp-overlay absolute top-4 right-4 md:top-10 md:right-10 pointer-events-none z-20 mix-blend-screen opacity-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px]"
+            style={{ willChange: 'transform, opacity' }}
+          >
              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                 <defs>
                   <clipPath id="stamp-clip">

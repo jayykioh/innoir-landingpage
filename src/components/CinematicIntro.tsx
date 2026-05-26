@@ -141,10 +141,13 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
     };
   }, [videoLoaded, onComplete]);
 
-  // Utility to split text into spans
   const splitText = (text: string, className: string) => {
     return text.split('').map((char, index) => (
-      <span key={index} className={`inline-block ${className} ${char === ' ' ? 'w-[0.3em]' : ''}`}>
+      <span 
+        key={index} 
+        className={`inline-block ${className} ${char === ' ' ? 'w-[0.3em]' : ''}`}
+        style={{ willChange: 'transform, opacity, filter' }}
+      >
         {char}
       </span>
     ));
@@ -163,6 +166,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
         ref={videoRef}
         src="/videos/grandopening.mp4"
         className="absolute inset-0 w-full h-full object-cover z-10"
+        style={{ willChange: 'opacity, filter' }}
         playsInline
         muted
         preload="auto"
@@ -190,7 +194,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
             </span>
           </div>
           
-          <div ref={lineRef} className="w-[100px] md:w-[150px] h-[1px] bg-white/20 my-4" />
+          <div ref={lineRef} className="w-[100px] md:w-[150px] h-[1px] bg-white/20 my-4" style={{ willChange: 'transform, opacity, filter' }} />
           
           <div ref={subtitle1Ref} className="font-mono text-[8px] md:text-[10px] tracking-[0.35em] text-white/60 uppercase mb-1.5">
             {splitText("GRAND OPENING", "sub1-char")}
@@ -204,6 +208,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
         <div 
           ref={envelopeSilhouetteRef} 
           className="absolute w-24 h-16 sm:w-32 sm:h-20 bg-white/5 border border-white/10 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex items-center justify-center overflow-hidden backdrop-blur-md pointer-events-none"
+          style={{ willChange: 'transform, opacity' }}
         >
           {/* Glassmorphic flap divider */}
           <div className="absolute top-0 left-0 w-full h-1/2 bg-white/5 border-b border-white/10" style={{ clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)' }} />

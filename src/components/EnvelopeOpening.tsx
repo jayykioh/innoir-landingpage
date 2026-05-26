@@ -52,7 +52,6 @@ export default function EnvelopeOpening({ onOpened }: { onOpened: () => void }) 
       ease: 'power2.in'
     });
 
-    // 3. Envelope flap opens with rotateX: 0 → -175deg on the top triangle, transformOrigin "top center", backfaceVisibility hidden. Duration 0.6s, ease power2.inOut. Trigger 0.4s after landing.
     tl.to(flapRef.current, {
       rotateX: -175,
       duration: 0.6,
@@ -61,29 +60,28 @@ export default function EnvelopeOpening({ onOpened }: { onOpened: () => void }) 
         if (typeof window !== 'undefined') {
           (window as any).triggerAudioCue?.('flap_open');
         }
-      },
-      onComplete: () => {
-        // 4. After flap opens: ticket auto-rises slightly (y: 0 → -40px) using GSAP, ease power2.out, duration 0.6s.
-        const ticketRiseProgress = { val: 0 };
-        gsap.to(ticketRiseProgress, {
-          val: -40,
-          duration: 0.6,
-          ease: 'power2.out',
-          onStart: () => {
-            if (typeof window !== 'undefined') {
-              (window as any).triggerAudioCue?.('ticket_pull');
-            }
-          },
-          onUpdate: () => {
-            dragY.set(ticketRiseProgress.val);
-          },
-          onComplete: () => {
-            // 5. Only AFTER the peek animation completes does drag become enabled
-            setIsDragEnabled(true);
-          }
-        });
       }
     }, '+=0.4');
+
+    // 4. After flap opens: ticket auto-rises slightly (y: 0 → -40px) using GSAP, ease power2.out, duration 0.6s.
+    const ticketRiseProgress = { val: 0 };
+    tl.to(ticketRiseProgress, {
+      val: -40,
+      duration: 0.6,
+      ease: 'power2.out',
+      onStart: () => {
+        if (typeof window !== 'undefined') {
+          (window as any).triggerAudioCue?.('ticket_pull');
+        }
+      },
+      onUpdate: () => {
+        dragY.set(ticketRiseProgress.val);
+      },
+      onComplete: () => {
+        // 5. Only AFTER the peek animation completes does drag become enabled
+        setIsDragEnabled(true);
+      }
+    });
   }, [dragY]);
 
   // Monitor dragY to trigger the transition
@@ -117,9 +115,10 @@ export default function EnvelopeOpening({ onOpened }: { onOpened: () => void }) 
         style={{ 
           transformStyle: 'preserve-3d',
           opacity: envelopeOpacity,
-          scale: envelopeScale
+          scale: envelopeScale,
+          willChange: 'transform, opacity'
         }}
-        className="relative w-[320px] h-[200px] sm:w-[400px] sm:h-[250px]"
+        className="relative w-[calc(100vw-32px)] max-w-[320px] h-[calc((100vw-32px)*0.625)] max-h-[200px] sm:w-[400px] sm:max-w-[400px] sm:h-[250px] sm:max-h-[250px]"
       >
         {/* Envelope Back Panel */}
         <div className="absolute inset-0 bg-neutral-900 border border-white/10 shadow-2xl rounded-md z-10" />
@@ -130,7 +129,7 @@ export default function EnvelopeOpening({ onOpened }: { onOpened: () => void }) 
           drag={isDragEnabled ? "y" : false}
           dragConstraints={{ top: -300, bottom: 40 }}
           dragElastic={0.08}
-          style={{ y: dragY }}
+          style={{ y: dragY, willChange: 'transform, opacity' }}
           onDragStart={() => {
             setIsDragging(true);
             if (typeof window !== 'undefined') {
@@ -158,7 +157,7 @@ export default function EnvelopeOpening({ onOpened }: { onOpened: () => void }) 
             }
           }}
           whileDrag={{ cursor: 'grabbing' }}
-          className="absolute left-1/2 -translate-x-1/2 bottom-[10px] w-[270px] h-[360px] sm:w-[340px] sm:h-[450px] bg-neutral-950 rounded-lg border border-white/10 z-20 shadow-[0_15px_50px_rgba(0,0,0,0.8)] overflow-hidden cursor-grab flex flex-col items-center justify-between p-6"
+          className="absolute left-1/2 -translate-x-1/2 bottom-[10px] w-[calc(100vw-64px)] max-w-[270px] h-[calc((100vw-64px)*1.33)] max-h-[360px] sm:w-[340px] sm:max-w-[340px] sm:h-[450px] sm:max-h-[450px] bg-neutral-950 rounded-lg border border-white/10 z-20 shadow-[0_15px_50px_rgba(0,0,0,0.8)] overflow-hidden cursor-grab flex flex-col items-center justify-between p-6"
         >
           {/* Pulsing glow ring around the ticket top edge */}
           {isDragEnabled && !isDragging && !isExiting && (
@@ -221,7 +220,8 @@ export default function EnvelopeOpening({ onOpened }: { onOpened: () => void }) 
           style={{ 
             transformOrigin: 'top center',
             backfaceVisibility: 'hidden',
-            transformStyle: 'preserve-3d'
+            transformStyle: 'preserve-3d',
+            willChange: 'transform'
           }}
         >
           {/* Clipped Flap Background */}

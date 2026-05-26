@@ -41,8 +41,8 @@ export default function CreateInvitationPage() {
       <div className="min-h-screen bg-black flex items-center justify-center font-sans p-4">
         <form onSubmit={handleLogin} className="w-full max-w-sm space-y-6 border border-white/20 p-8 rounded-lg bg-neutral-950">
           <div className="text-center space-y-2">
-            <h1 className="font-syne text-2xl text-white tracking-widest">INNOIR</h1>
-            <p className="font-inter text-xs text-white/50 tracking-widest uppercase">Invitation Creator</p>
+            <h1 className="font-display text-2xl text-white tracking-widest">INNOIR</h1>
+            <p className="font-sans text-xs text-white/50 tracking-widest uppercase">Invitation Creator</p>
           </div>
           
           <div className="space-y-4">
@@ -56,7 +56,7 @@ export default function CreateInvitationPage() {
             {error && <p className="text-red-500 text-xs">{error}</p>}
             <button 
               type="submit"
-              className="w-full bg-white text-black font-syne tracking-widest py-3 hover:bg-neutral-200 transition-colors"
+              className="w-full bg-white text-black font-display tracking-widest py-3 hover:bg-neutral-200 transition-colors"
             >
               ACCESS
             </button>
@@ -73,8 +73,8 @@ export default function CreateInvitationPage() {
       {/* Sidebar Controls */}
       <div className="w-full md:w-[400px] border-r border-white/10 p-8 flex flex-col gap-8 h-auto md:h-screen sticky top-0 bg-neutral-950 z-20">
         <div className="space-y-2">
-          <h1 className="font-syne text-2xl tracking-widest">INNOIR</h1>
-          <p className="font-inter text-xs text-white/50 tracking-widest uppercase">Create Invitation</p>
+          <h1 className="font-display text-2xl tracking-widest">INNOIR</h1>
+          <p className="font-sans text-xs text-white/50 tracking-widest uppercase">Create Invitation</p>
         </div>
 
         <div className="space-y-4 flex-1">
@@ -99,7 +99,7 @@ export default function CreateInvitationPage() {
               <button 
                 onClick={copyLink}
                 disabled={!link}
-                className="flex-1 bg-white text-black font-syne tracking-widest py-3 flex items-center justify-center gap-2 disabled:opacity-50 hover:bg-neutral-200 transition-colors"
+                className="flex-1 bg-white text-black font-display tracking-widest py-3 flex items-center justify-center gap-2 disabled:opacity-50 hover:bg-neutral-200 transition-colors"
               >
                 {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
                 {copied ? 'COPIED' : 'COPY LINK'}
@@ -122,13 +122,13 @@ export default function CreateInvitationPage() {
 
       {/* Live Preview Area */}
       <div className="flex-1 bg-neutral-900/50 flex items-center justify-center p-8 overflow-y-auto relative min-h-[500px] h-auto md:h-screen">
-        <div className="absolute top-8 left-8 text-xs text-white/30 font-syne tracking-widest uppercase z-30">
+        <div className="absolute top-8 left-8 text-xs text-white/30 font-display tracking-widest uppercase z-30">
           Live Preview
         </div>
         
         {/* Scale container to fit the bento grid nicely */}
         <div className="w-full max-w-2xl transform scale-75 md:scale-90 lg:scale-100 origin-center pointer-events-none my-12">
-          <InteractiveTicket guestName={guestName || 'Special Guest'} />
+          <InteractiveTicket guestName={guestName || 'Special Guest'} previewMode={true} />
         </div>
       </div>
     </div>
