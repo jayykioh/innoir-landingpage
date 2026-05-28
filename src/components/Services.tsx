@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import gsap from "gsap";
 
 const SERVICES = [
     { id: 1, title: "Apocalypse", src: "/photo/collections/apocalypse/apocalypse.jpg", count: "01", season: "FW25" },
@@ -17,20 +16,11 @@ const SERVICES = [
 export default function Services() {
     const [activeImage, setActiveImage] = useState<number | null>(0);
     const [isMobile, setIsMobile] = useState(false);
-    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
         const checkMobile = () => {
             const mobile = window.innerWidth < 768;
             setIsMobile(mobile);
-            
-            // Set initial GSAP layout correctly based on viewport
-            gsap.set(itemRefs.current, {
-                flexGrow: (i) => i === 0 ? 1 : 0,
-                flexBasis: (i) => i === 0 ? "0%" : (mobile ? "4.5rem" : "5rem"),
-                width: mobile ? "100%" : "auto",
-                height: mobile ? "auto" : "100%",
-            });
         };
         checkMobile();
         
@@ -41,15 +31,6 @@ export default function Services() {
     const handleInteraction = (index: number) => {
         if (activeImage === index) return;
         setActiveImage(index);
-
-        // Buttery smooth GSAP flex animation
-        gsap.to(itemRefs.current, {
-            flexGrow: (i) => i === index ? 1 : 0,
-            flexBasis: (i) => i === index ? "0%" : (isMobile ? "4.5rem" : "5rem"),
-            duration: 0.85,
-            ease: "expo.out", // Extra smooth exponential easing
-            overwrite: "auto"
-        });
     };
 
     return (
@@ -77,8 +58,13 @@ export default function Services() {
                             return (
                                 <div
                                     key={item.id}
-                                    ref={(el) => { itemRefs.current[index] = el; }}
-                                    className="relative cursor-pointer overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 group bg-black/20 shrink-0"
+                                    className="relative cursor-pointer overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 group bg-black/20 shrink-0 transition-all duration-700 ease-out will-change-[flex-grow,flex-basis]"
+                                    style={{
+                                        flexGrow: isActive ? 1 : 0,
+                                        flexBasis: isActive ? "0%" : (isMobile ? "4.5rem" : "5rem"),
+                                        width: isMobile ? "100%" : "auto",
+                                        height: isMobile ? "auto" : "100%",
+                                    }}
                                     onClick={() => handleInteraction(index)}
                                     onMouseEnter={() => !isMobile && handleInteraction(index)}
                                 >

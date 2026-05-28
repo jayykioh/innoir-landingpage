@@ -30,9 +30,9 @@ export default function Hero() {
         const introTl = gsap.timeline();
 
         // Initial States
-        gsap.set(textRef.current, { scale: 0.8, filter: "blur(10px)", opacity: 0 });
-        gsap.set(imageRef.current, { opacity: 0, scale: 1.1 });
-        gsap.set(".hero-floating-text", { opacity: 0, y: 20 });
+        gsap.set(textRef.current, { scale: 0.8, filter: "blur(10px)", opacity: 0, willChange: "transform, opacity, filter" });
+        gsap.set(imageRef.current, { opacity: 0, scale: 1.1, willChange: "transform, opacity" });
+        gsap.set(".hero-floating-text", { opacity: 0, y: 20, willChange: "transform, opacity" });
 
         // Animation Sequence
         introTl.to(textRef.current, {

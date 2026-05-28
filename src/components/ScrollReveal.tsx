@@ -69,10 +69,15 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
         gsap.fromTo(
             wordElements,
-            { opacity: baseOpacity, willChange: 'opacity' },
+            { 
+                opacity: baseOpacity, 
+                filter: enableBlur ? `blur(${blurStrength}px)` : 'blur(0px)',
+                willChange: 'opacity, transform, filter' 
+            },
             {
                 ease: 'none',
                 opacity: 1,
+                filter: 'blur(0px)',
                 stagger: 0.05,
                 scrollTrigger: {
                     trigger: el,
@@ -83,25 +88,6 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
                 }
             }
         );
-
-        if (enableBlur) {
-            gsap.fromTo(
-                wordElements,
-                { filter: `blur(${blurStrength}px)` },
-                {
-                    ease: 'none',
-                    filter: 'blur(0px)',
-                    stagger: 0.05,
-                    scrollTrigger: {
-                        trigger: el,
-                        scroller,
-                        start: 'top bottom-=20%',
-                        end: wordAnimationEnd,
-                        scrub: 1.5 // Smoother scrub
-                    }
-                }
-            );
-        }
 
         return () => {
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());

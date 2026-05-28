@@ -83,9 +83,9 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
         }
       }, "ambient_bg")
       .to(recordingDotRef.current, { opacity: 0.4, duration: 0.5 }, "ambient_bg+=0.5")
-      // Slow elegant text expand/letter-spacing shift
-      .to('.title-char', { 
-        letterSpacing: '0.12em', 
+      // Slow elegant text expand/scale shift (better performance than letterSpacing)
+      .to(titleContainerRef.current, { 
+        scale: 1.05, 
         duration: 2.5, 
         ease: 'power1.out' 
       }, "ambient_bg");

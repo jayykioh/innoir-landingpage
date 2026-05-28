@@ -133,6 +133,7 @@ const Column = forwardRef<HTMLDivElement, ColumnProps>(({ items, topClass, conta
         <div
             ref={ref}
             className={`relative flex h-full w-1/2 md:w-1/4 lg:w-1/4 min-w-[150px] md:min-w-[250px] flex-col gap-4 md:gap-[2vw] ${topClass} ${containerClass}`}
+            style={{ willChange: 'transform' }}
         >
             {items.map((item, i) => (
                 <div 
