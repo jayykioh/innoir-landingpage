@@ -5,6 +5,8 @@ import { Menu, X } from "lucide-react"; // Added X icon
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import Image from "next/image";
+
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -34,9 +36,19 @@ export default function Header() {
                     <Link
                         href="/"
                         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        className="text-2xl font-bold tracking-tighter uppercase font-display relative z-50 cursor-pointer"
+                        className="relative z-50 cursor-pointer group flex items-center gap-2.5"
                     >
-                        INNOIR
+                        <Image
+                            src="/photo/logo.png"
+                            alt="INNOIR Logo"
+                            width={36}
+                            height={36}
+                            priority
+                            className="object-contain h-8 w-8 sm:h-9 sm:w-9 invert transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <span className="text-xl sm:text-2xl font-bold tracking-tighter uppercase font-display">
+                            INNOIR
+                        </span>
                     </Link>
 
                     {/* Desktop Nav */}

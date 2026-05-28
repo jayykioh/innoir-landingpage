@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const SERVICES = [
-    { id: 1, title: "Apocalypse", src: "/photo/collections/apocalypse/apocalypse.jpg", count: "01", season: "FW25" },
+    { id: 1, title: "Apocalypse", src: "/photo/collections/apocalypse/apocalypse.jpg", count: "01", season: "FW25", href: "/collections/apocalypse" },
     { id: 2, title: "Baggy Shorts", src: "/photo/collections/baggyshorts/baggyshorts.jpg", count: "02", season: "SS25" },
     { id: 3, title: "Raw Denim Pants", src: "/photo/collections/denimpants/denimpants.jpg", count: "03", season: "CORE" },
     { id: 4, title: "T-Shirts", src: "/photo/collections/tshirts/tshirt.png", count: "04", season: "ESSENTIAL" },
@@ -14,6 +15,7 @@ const SERVICES = [
 ];
 
 export default function Services() {
+    const router = useRouter();
     const [activeImage, setActiveImage] = useState<number | null>(0);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -28,7 +30,17 @@ export default function Services() {
         return () => window.removeEventListener("resize", checkMobile);
     }, []);
 
-    const handleInteraction = (index: number) => {
+    const handleInteraction = (item: (typeof SERVICES)[number], index: number) => {
+        if (item.href && activeImage === index) {
+            router.push(item.href);
+            return;
+        }
+
+        if (activeImage === index) return;
+        setActiveImage(index);
+    };
+
+    const handlePreview = (index: number) => {
         if (activeImage === index) return;
         setActiveImage(index);
     };
@@ -65,8 +77,8 @@ export default function Services() {
                                         width: isMobile ? "100%" : "auto",
                                         height: isMobile ? "auto" : "100%",
                                     }}
-                                    onClick={() => handleInteraction(index)}
-                                    onMouseEnter={() => !isMobile && handleInteraction(index)}
+                                    onClick={() => handleInteraction(item, index)}
+                                    onMouseEnter={() => !isMobile && handlePreview(index)}
                                 >
                                     <Image
                                         src={item.src}

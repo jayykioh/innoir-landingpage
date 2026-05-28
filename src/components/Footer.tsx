@@ -2,6 +2,7 @@
 
 import { Facebook, MessageCircle, AtSign, Instagram } from "lucide-react";
 import { motion } from "framer-motion";
+import { siteConfig } from "@/lib/site";
 
 export default function Footer() {
     const text = "INNOIR".split("");
@@ -31,7 +32,7 @@ export default function Footer() {
 
                 <div className="flex flex-col md:flex-row gap-8 md:gap-16 mt-8">
                     <a
-                        href="https://www.instagram.com/innoir.streetwear/"
+                        href={siteConfig.social.instagram.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-xl font-display uppercase hover:text-gray-400 transition-colors"
@@ -40,7 +41,7 @@ export default function Footer() {
                     </a>
 
                     <a
-                        href="https://www.threads.com/@nmightph"
+                        href={siteConfig.social.threads.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-xl font-display uppercase hover:text-gray-400 transition-colors"
@@ -49,7 +50,7 @@ export default function Footer() {
                     </a>
 
                     <a
-                        href="https://www.facebook.com/phu.nguyen.486685"
+                        href={siteConfig.social.facebook.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-xl font-display uppercase hover:text-gray-400 transition-colors"

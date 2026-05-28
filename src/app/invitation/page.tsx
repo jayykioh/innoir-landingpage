@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import InvitationClient from '@/components/InvitationClient';
+import { absoluteUrl, siteConfig } from '@/lib/site';
 
 // Dynamic metadata generation for social sharing (Messenger, Zalo, Slack, etc.)
 export async function generateMetadata({
@@ -22,16 +23,23 @@ export async function generateMetadata({
   return {
     title: titleText,
     description: descText,
+    alternates: {
+      canonical: `/invitation?to=${encodeURIComponent(to)}&vip=${isVIP ? 'true' : 'false'}`,
+    },
+    robots: {
+      index: false,
+      follow: false,
+    },
     openGraph: {
       title: titleText,
       description: descText,
-      url: `https://www.innoir.site/invitation?to=${encodeURIComponent(to)}&vip=${isVIP ? 'true' : 'false'}`,
-      siteName: "INNOIR Streetwear",
+      url: absoluteUrl(`/invitation?to=${encodeURIComponent(to)}&vip=${isVIP ? 'true' : 'false'}`),
+      siteName: siteConfig.legalName,
       locale: "en_US",
       type: "website",
       images: [
         {
-          url: '/photo/grandopening.jpg',
+          url: siteConfig.grandOpeningImage,
           width: 1200,
           height: 630,
           alt: `INNOIR Grand Opening Invitation for ${to}`,
@@ -42,7 +50,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: titleText,
       description: descText,
-      images: ['/photo/grandopening.jpg'],
+      images: [siteConfig.grandOpeningImage],
     },
   };
 }

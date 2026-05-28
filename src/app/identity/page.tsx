@@ -1,10 +1,5 @@
 import { Metadata } from "next";
 import Header from "@/components/Header";
-
-export const metadata: Metadata = {
-    title: "Identity | INNOIR Streetwear",
-    description: "Discover the origins, manifesto, and identity of INNOIR Streetwear. Redefining Da Nang local streetwear.",
-};
 import Footer from "@/components/Footer";
 import IdentityIntro from "@/components/identity/IdentityIntro";
 import ManifestoBlocks from "@/components/identity/ManifestoBlocks";
@@ -12,6 +7,28 @@ import IdentityBio from "@/components/identity/IdentityBio";
 import FriendsList from "@/components/identity/FriendsList";
 import ProcessStrip from "@/components/identity/ProcessStrip";
 import IdentityOutro from "@/components/identity/IdentityOutro";
+import { routes, siteConfig } from "@/lib/site";
+
+export const metadata: Metadata = {
+    title: "Identity | INNOIR Streetwear",
+    description: "Discover the origins, manifesto, and identity of INNOIR Streetwear. Redefining Da Nang local streetwear.",
+    alternates: {
+        canonical: routes.identity,
+    },
+    openGraph: {
+        title: "Identity | INNOIR Streetwear",
+        description: "Discover the origins, manifesto, and identity of INNOIR Streetwear. Redefining Da Nang local streetwear.",
+        url: routes.identity,
+        siteName: siteConfig.name,
+        images: [siteConfig.ogImage],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Identity | INNOIR Streetwear",
+        description: "Discover the origins, manifesto, and identity of INNOIR Streetwear.",
+        images: [siteConfig.ogImage],
+    },
+};
 
 export default function IdentityPage() {
     return (

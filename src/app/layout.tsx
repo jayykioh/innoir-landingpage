@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Syne, Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { absoluteUrl, routes, siteConfig, socialProfileUrls } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,18 +25,22 @@ const beVietnamPro = Be_Vietnam_Pro({
 
 export const metadata: Metadata = {
   title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
-  description: "Discover INNOIR Streetwear, the premier local fashion brand in Da Nang, Vietnam. Authentic designs, premium quality, and the spirit of the night market. Est. 2025.",
+  description: siteConfig.description,
   keywords: ["streetwear Da Nang", 'innoir', 'innoir streetwear', "local brand Da Nang", "INNOIR", "Vietnam streetwear", "fashion Da Nang", "authentic streetwear", "D13 An Thuong 34", "An Thuong 34 Da Nang", "thời trang đường phố Đà Nẵng"],
-  metadataBase: new URL("https://www.innoir.site"),
+  metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: routes.home,
+  },
   openGraph: {
     title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
     description: "INNOIR: Authentic Streetwear from Da Nang. Est. 2025. Redefining local fashion with bold designs and premium quality.",
-    siteName: "INNOIR",
+    url: routes.home,
+    siteName: siteConfig.name,
     locale: "vi_VN",
     type: "website",
     images: [
       {
-        url: "/og-image.jpg", // Ensure this exists or use a default
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "INNOIR Streetwear Collection",
@@ -45,8 +50,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "INNOIR Streetwear | Da Nang",
-    description: "Authentic Streetwear from Da Nang, Vietnam.",
-    images: ["/og-image.jpg"],
+    description: siteConfig.shortDescription,
+    images: [siteConfig.ogImage],
   },
   robots: {
     index: true,
@@ -67,22 +72,22 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": "INNOIR Streetwear",
-  "image": "https://www.innoir.site/photo/owner.jpg",
-  "description": "Premier local streetwear brand in Da Nang, Vietnam.",
+  "name": siteConfig.legalName,
+  "image": absoluteUrl("/photo/owner.jpg"),
+  "description": siteConfig.shortDescription,
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "D13 An Thuong 34",
-    "addressLocality": "Da Nang",
-    "addressCountry": "VN"
+    "streetAddress": siteConfig.address.street,
+    "addressLocality": siteConfig.address.locality,
+    "addressCountry": siteConfig.address.country
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": 16.049561,
-    "longitude": 108.244352
+    "latitude": siteConfig.geo.latitude,
+    "longitude": siteConfig.geo.longitude
   },
-  "url": "https://www.innoir.site",
-  "telephone": "+84328244990",
+  "url": siteConfig.url,
+  "telephone": siteConfig.phone,
   "priceRange": "$$",
   "openingHoursSpecification": [
     {
@@ -100,9 +105,7 @@ const jsonLd = {
       "closes": "23:00"
     }
   ],
-  "sameAs": [
-    "https://instagram.com/innoir.streetwear"
-  ]
+  "sameAs": socialProfileUrls
 };
 
 export default function RootLayout({

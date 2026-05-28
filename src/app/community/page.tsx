@@ -1,13 +1,30 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import Marquee from "@/components/Marquee";
+import DomeGallery from "@/components/DomeGallery";
+import { routes, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
     title: "Community | INNOIR Streetwear",
     description: "Explore the INNOIR Streetwear community. Authentic vibes from Da Nang. Join the movement and be part of our local streetwear culture.",
+    alternates: {
+        canonical: routes.community,
+    },
+    openGraph: {
+        title: "Community | INNOIR Streetwear",
+        description: "Explore the INNOIR Streetwear community. Authentic vibes from Da Nang. Join the movement and be part of our local streetwear culture.",
+        url: routes.community,
+        siteName: siteConfig.name,
+        images: [siteConfig.ogImage],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Community | INNOIR Streetwear",
+        description: "Explore the INNOIR Streetwear community from Da Nang.",
+        images: [siteConfig.ogImage],
+    },
 };
-import { ArrowUpRight } from "lucide-react";
-import Marquee from "@/components/Marquee";
-import DomeGallery from "@/components/DomeGallery";
 
 const COMMUNITY_PICS = [
     { src: "/photo/z7407913812380_f9cbee645b9e7d3737f22d2b6ed4844c.jpg", alt: "@street.vibes" },
@@ -88,11 +105,11 @@ export default function CommunityPage() {
                     YOUR TURN.
                 </h2>
                 <p className="font-mono text-lg md:text-xl uppercase tracking-widest mb-12 max-w-2xl">
-                    Tag us @innoir.streetwear to be featured in the archive.
+                    Tag us {siteConfig.social.instagram.handle} to be featured in the archive.
                     Defined by you.
                 </p>
                 <Link
-                    href="https://instagram.com/innoir.streetwear"
+                    href={siteConfig.social.instagram.url}
                     target="_blank"
                     className="group relative inline-flex items-center gap-4 px-12 py-6 border-2 border-black rounded-full overflow-hidden hover:text-white transition-colors duration-300"
                 >
