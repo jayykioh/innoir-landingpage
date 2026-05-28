@@ -1,115 +1,169 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import gsap from "gsap";
 
 const SERVICES = [
-    { id: 1, title: "TEES", src: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80", count: "01", season: "SS25" },
-    { id: 2, title: "HOODIES", src: "https://images.unsplash.com/photo-1556906781-9a412961d289?w=800&q=80", count: "02", season: "FW24" },
-    { id: 3, title: "ACCESSORIES", src: "https://images.unsplash.com/photo-1589256833024-9b33e8886b95?w=800&q=80", count: "03", season: "CORE" },
-    { id: 4, title: "CUSTOMS (1-OF-1)", src: "/photo/z7407913834487_49735fe8bf1022a640133153d95902f2.jpg", count: "04", season: "EXCL" },
+    { id: 1, title: "Apocalypse", src: "/photo/collections/apocalypse/apocalypse.jpg", count: "01", season: "FW25" },
+    { id: 2, title: "Baggy Shorts", src: "/photo/collections/baggyshorts/baggyshorts.jpg", count: "02", season: "SS25" },
+    { id: 3, title: "Raw Denim Pants", src: "/photo/collections/denimpants/denimpants.jpg", count: "03", season: "CORE" },
+    { id: 4, title: "T-Shirts", src: "/photo/collections/tshirts/tshirt.png", count: "04", season: "ESSENTIAL" },
+    { id: 5, title: "Outerwear", src: "/photo/owner.jpg", count: "05", season: "FW25" },
+    { id: 6, title: "Accessories", src: "/photo/collections/accesories/accesories.jpg", count: "06", season: "ALL" },
 ];
 
 export default function Services() {
-    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [activeImage, setActiveImage] = useState<number | null>(0);
+    const [isMobile, setIsMobile] = useState(false);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-    // Motion Values for Mouse Position
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
+    useEffect(() => {
+        const checkMobile = () => {
+            const mobile = window.innerWidth < 768;
+            setIsMobile(mobile);
+            
+            // Set initial GSAP layout correctly based on viewport
+            gsap.set(itemRefs.current, {
+                flexGrow: (i) => i === 0 ? 1 : 0,
+                flexBasis: (i) => i === 0 ? "0%" : (mobile ? "4.5rem" : "5rem"),
+                width: mobile ? "100%" : "auto",
+                height: mobile ? "auto" : "100%",
+            });
+        };
+        checkMobile();
+        
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
 
-    // Smooth Spring Physics
-    const springConfig = { damping: 20, stiffness: 300, mass: 0.5 };
-    const x = useSpring(mouseX, springConfig);
-    const y = useSpring(mouseY, springConfig);
+    const handleInteraction = (index: number) => {
+        if (activeImage === index) return;
+        setActiveImage(index);
 
-    // Velocity-based Rotation
-    const rotate = useTransform(x, [0, typeof window !== 'undefined' ? window.innerWidth : 1000], [-5, 5]);
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        mouseX.set(e.clientX);
-        mouseY.set(e.clientY);
+        // Buttery smooth GSAP flex animation
+        gsap.to(itemRefs.current, {
+            flexGrow: (i) => i === index ? 1 : 0,
+            flexBasis: (i) => i === index ? "0%" : (isMobile ? "4.5rem" : "5rem"),
+            duration: 0.85,
+            ease: "expo.out", // Extra smooth exponential easing
+            overwrite: "auto"
+        });
     };
 
     return (
         <section
             className="relative w-full py-20 border-grid-b bg-background overflow-hidden"
             id="works"
-            onMouseMove={handleMouseMove}
         >
             <div className="container mx-auto px-4 md:px-6">
                 <div className="mb-12 flex items-end justify-between">
-                    <h2 className="text-4xl md:text-6xl font-display font-bold uppercase mix-blend-difference text-white">Collections</h2>
+                    <h2 className="text-4xl md:text-6xl font-display font-bold uppercase text-white">Collections</h2>
                     <span className="font-mono text-sm text-gray-400">(2025)</span>
                 </div>
 
-                <div className="flex flex-col border-grid-t">
-                    {SERVICES.map((item, index) => (
-                        <div
-                            key={item.id}
-                            className="group relative flex flex-col border-b border-white/20 transition-colors cursor-pointer"
-                            onMouseEnter={() => setHoveredIndex(index)}
-                            onMouseLeave={() => setHoveredIndex(null)}
-                        >
-                            <div className="flex items-center justify-between py-8">
-                                {/* Left: Count & Title */}
-                                <div className="flex items-center gap-6 md:gap-16 w-full relative z-10">
-                                    <span className="font-mono text-xs md:text-sm text-gray-500 w-8">{item.count}</span>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="w-full flex justify-center"
+                >
+                    <div className="flex flex-col md:flex-row w-full items-stretch justify-center gap-2 h-[600px] lg:h-[700px]">
+                        {SERVICES.map((item, index) => {
+                            const isActive = activeImage === index;
+                            
+                            return (
+                                <div
+                                    key={item.id}
+                                    ref={(el) => { itemRefs.current[index] = el; }}
+                                    className="relative cursor-pointer overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 group bg-black/20 shrink-0"
+                                    onClick={() => handleInteraction(index)}
+                                    onMouseEnter={() => !isMobile && handleInteraction(index)}
+                                >
+                                    <Image
+                                        src={item.src}
+                                        alt={item.title}
+                                        fill
+                                        className={`object-cover transition-all duration-1000 ease-out ${isActive ? 'grayscale-0 contrast-100 scale-100' : 'grayscale contrast-125 scale-110 group-hover:scale-105'}`}
+                                    />
+                                    
+                                    {/* Dark Gradient Overlay for text readability (only when active) */}
+                                    <AnimatePresence>
+                                        {isActive && (
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.4 }}
+                                                className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent pointer-events-none"
+                                            />
+                                        )}
+                                    </AnimatePresence>
 
-                                    {/* Title */}
-                                    <h3 className={`text-5xl md:text-8xl font-display font-black uppercase transition-all duration-300
-                                        text-white md:text-transparent md:[-webkit-text-stroke:1px_rgba(255,255,255,0.8)] 
-                                        md:group-hover:text-white md:group-hover:[-webkit-text-stroke:0px] md:group-hover:translate-x-4
-                                        ${hoveredIndex === index ? 'translate-x-4' : ''}
-                                    `}>
-                                        {item.title}
-                                    </h3>
+                                    {/* Text Overlay for Active Item */}
+                                    <AnimatePresence>
+                                        {isActive && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 15 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 15 }}
+                                                transition={{ duration: 0.4, delay: 0.15 }}
+                                                className="absolute bottom-0 left-0 w-full p-6 md:p-10 flex flex-col justify-end pointer-events-none min-w-[200px]"
+                                            >
+                                                <div className="flex items-center gap-4 mb-2">
+                                                    <span className="font-mono text-sm md:text-base text-white/80">{item.count}</span>
+                                                    <span className="font-mono text-xs md:text-sm text-white/50">{item.season}</span>
+                                                </div>
+                                                <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-black uppercase text-white leading-[0.9] tracking-tighter shadow-black drop-shadow-2xl">
+                                                    {item.title}
+                                                </h3>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+
+                                    {/* Collapsed State Title (Vertical Text on Desktop) */}
+                                    <AnimatePresence>
+                                        {!isActive && !isMobile && (
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="absolute inset-0 flex flex-col items-center justify-between py-8 bg-black/50 hover:bg-black/30 transition-colors"
+                                            >
+                                                <span className="font-mono text-xs text-white/50">{item.count}</span>
+                                                <span className="font-display font-bold text-white/80 uppercase tracking-widest [writing-mode:vertical-lr] rotate-180 whitespace-nowrap text-xl">
+                                                    {item.title}
+                                                </span>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                    
+                                    {/* Collapsed State Title (Horizontal Text on Mobile) */}
+                                    <AnimatePresence>
+                                        {!isActive && isMobile && (
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="absolute inset-0 flex items-center justify-between px-6 bg-black/60"
+                                            >
+                                                <span className="font-display font-bold text-white/80 uppercase tracking-widest whitespace-nowrap text-lg">
+                                                    {item.title}
+                                                </span>
+                                                <span className="font-mono text-xs text-white/50">{item.count}</span>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
-
-                                {/* Right: Metadata & Icon */}
-                                <div className="flex items-center gap-6 md:gap-12 relative z-10">
-                                    <span className="font-mono text-xs text-gray-500 hidden md:block">{item.season}</span>
-                                    <div className="relative overflow-hidden">
-                                        <ArrowUpRight className={`h-8 w-8 md:h-12 md:w-12 text-white transition-transform duration-300 ${hoveredIndex === index ? 'rotate-45 md:rotate-0 md:-translate-y-full md:translate-x-full' : ''}`} />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Mobile Content: Always Visible Image Stack */}
-                        </div>
-                    ))}
-                </div>
+                            );
+                        })}
+                    </div>
+                </motion.div>
             </div>
-
-            {/* Desktop Floating Image Portal */}
-            <motion.div
-                style={{ x, y, rotate }}
-                className="pointer-events-none fixed top-0 left-0 z-50 h-[300px] w-[250px] md:h-[400px] md:w-[320px] overflow-hidden rounded-lg hidden md:block mix-blend-difference"
-            >
-                {hoveredIndex !== null && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                        className="relative w-full h-full"
-                    >
-                        <Image
-                            src={SERVICES[hoveredIndex].src}
-                            alt={`INNOIR Collection - ${SERVICES[hoveredIndex].title}`}
-                            fill
-                            className="object-cover grayscale contrast-125"
-                        />
-
-                        <div className="absolute inset-x-0 bottom-4 overflow-hidden">
-                            <div className="animate-marquee whitespace-nowrap text-[10px] font-mono font-bold uppercase text-white/80">
-                                View Collection — View Collection — View Collection — View Collection —
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </motion.div>
         </section>
     );
 }

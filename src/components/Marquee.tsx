@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function Marquee({ text = "INNOIR © — STREETWEAR — CHỢ ĐÊM AN THƯỢNG — PHU NGUYEN — " }: { text?: string }) {
+export default function Marquee({ text = "INNOIR © — STREETWEAR — D13 AN THUONG 34 — PHU NGUYEN - LUC DOAN - TAI NGUYEN — " }: { text?: string }) {
     return (
         <div className="relative w-full overflow-hidden bg-white text-black py-4 border-y border-black">
             <div className="flex whitespace-nowrap">

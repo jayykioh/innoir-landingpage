@@ -1,6 +1,10 @@
-"use client";
-
+import { Metadata } from "next";
 import Header from "@/components/Header";
+
+export const metadata: Metadata = {
+    title: "Identity | INNOIR Streetwear",
+    description: "Discover the origins, manifesto, and identity of INNOIR Streetwear. Redefining Da Nang local streetwear.",
+};
 import Footer from "@/components/Footer";
 import IdentityIntro from "@/components/identity/IdentityIntro";
 import ManifestoBlocks from "@/components/identity/ManifestoBlocks";

@@ -1,6 +1,10 @@
-"use client";
-
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: "Community | INNOIR Streetwear",
+    description: "Explore the INNOIR Streetwear community. Authentic vibes from Da Nang. Join the movement and be part of our local streetwear culture.",
+};
 import { ArrowUpRight } from "lucide-react";
 import Marquee from "@/components/Marquee";
 import DomeGallery from "@/components/DomeGallery";

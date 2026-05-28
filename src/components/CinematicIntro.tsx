@@ -48,7 +48,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
     gsap.set('.sub2-char', { opacity: 0, y: 15, filter: 'blur(4px)' });
     
     // Video starts completely dark and blurred
-    gsap.set(videoRef.current, { opacity: 0, filter: 'blur(20px) brightness(0)' });
+    gsap.set(videoRef.current, { opacity: 0, filter: 'blur(12px) brightness(0.25)' });
     gsap.set(recordingDotRef.current, { opacity: 0 });
     gsap.set(envelopeSilhouetteRef.current, { opacity: 0, scale: 0.8, y: 0, rotation: 0 });
 
@@ -74,7 +74,6 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
     tl.addLabel("ambient_bg", 2.2)
       .to(videoRef.current, { 
         opacity: 0.35, 
-        filter: 'blur(12px) brightness(0.25)', 
         duration: 1.5, 
         ease: 'power2.out',
         onStart: () => {
@@ -123,7 +122,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
         { opacity: 1, scale: 1, rotateX: 0, duration: 0.8, ease: 'power3.out' },
         "envelope_morph+=0.4"
       )
-      // High-end envelope drop into opening scene
+      // High-end envelope drop downwards into the scene
       .to(envelopeSilhouetteRef.current, { 
         y: '70vh', 
         rotation: -6, 
@@ -184,7 +183,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
       </div>
 
       {/* --- Intro Content Overlay --- */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-30 pointer-events-none px-4">
+      <div className="absolute inset-0 flex flex-col items-center justify-center pb-[15vh] sm:pb-0 z-30 pointer-events-none px-4">
         
         {/* Subtitles (Reveal/Exit) */}
         <div className="flex flex-col items-center text-center">

@@ -83,7 +83,7 @@ export default function Hero() {
             >
                 <Image
                     src="/photo/owner.jpg"
-                    alt="Innoir Founder"
+                    alt="Innoir Founders"
                     fill
                     className="object-cover object-center"
                     priority

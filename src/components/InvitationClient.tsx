@@ -6,6 +6,7 @@ import CinematicIntro from './CinematicIntro';
 import EnvelopeOpening from './EnvelopeOpening';
 import InteractiveTicket from './InteractiveTicket';
 import AtmosphereScene from './AtmosphereScene';
+import FloatingParticles from './FloatingParticles';
 
 export type Scene = 'intro' | 'envelope' | 'ticket';
 export type AudioCue = 'envelope_land' | 'flap_open' | 'ticket_pull' | 'stamp';
@@ -178,6 +179,8 @@ export default function InvitationClient({ guestName, isVIP = false }: { guestNa
     <AudioContext.Provider value={{ triggerAudioCue }}>
       <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-black overflow-hidden" onClick={playAudio}>
         
+        <FloatingParticles isVIP={isVIP} />
+
         {/* Atmosphere Scene — Staggered Fade-in */}
         {currentScene !== 'intro' && (
           <motion.div 

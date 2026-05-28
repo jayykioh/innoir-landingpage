@@ -9,7 +9,7 @@ export default function Footer() {
     return (
         <footer className="relative w-full bg-background pt-20 pb-10 px-6 border-grid-t" id="contact">
             <div className="flex flex-col items-center justify-center text-center">
-                <h1 className="text-[12vw] leading-none font-display font-black tracking-tighter uppercase text-white mb-8 flex justify-center cursor-default overflow-hidden">
+                <div className="text-[12vw] leading-none font-display font-black tracking-tighter uppercase text-white mb-8 flex justify-center cursor-default overflow-hidden">
                     {text.map((char, index) => (
                         <motion.span
                             key={index}
@@ -27,7 +27,7 @@ export default function Footer() {
                             {char}
                         </motion.span>
                     ))}
-                </h1>
+                </div>
 
                 <div className="flex flex-col md:flex-row gap-8 md:gap-16 mt-8">
                     <a

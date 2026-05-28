@@ -1,138 +1,100 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus } from "lucide-react";
+import {
+    motion,
+    useMotionTemplate,
+    useScroll,
+    useTransform,
+} from "framer-motion";
+import React, { useRef } from "react";
+
+const FAQS = [
+    {
+        q: "Where are you based?",
+        a: "Da Nang, Vietnam. Built local, moving global."
+    },
+    {
+        q: "How do I order right now?",
+        a: "We’re mostly offline for now. Orders and questions are handled through the Contact section on this site."
+    },
+    {
+        q: "How’s the fit / sizing?",
+        a: "Relaxed silhouettes. If you’re unsure, share your height and weight and we’ll guide the fit."
+    },
+    {
+        q: "Do you ship?",
+        a: "Local first in Da Nang. Nationwide shipping depends on the drop."
+    },
+    {
+        q: "When are new drops?",
+        a: "Limited batches. Updates roll out through our channels."
+    },
+    {
+        q: "When is the online store launching?",
+        a: "Soon. No rush."
+    }
+];
 
 export default function OrderingFAQ() {
-    return (
-        <section className="relative w-full bg-black text-white border-grid-b" id="faq">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-24 py-24 md:py-32">
-                    {/* Left: Sticky Header */}
-                    <div className="md:col-span-1">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="sticky top-32"
-                        >
-                            <p className="font-sans text-xs uppercase tracking-[0.3em] text-white/50 mb-8">
-                                FAQ
-                            </p>
-                            <h2 className="text-5xl md:text-6xl font-display font-bold uppercase tracking-tighter mb-6 leading-[0.9]">
-                                Before<br />You DM
-                            </h2>
-                            <p className="font-sans text-sm text-white/60 max-w-xs leading-relaxed">
-                                We prioritize offline experiences.
-                                Most answers are here.
-                                <span className="block mt-4 text-white/40 font-sans text-xs font-bold uppercase">
-                                    RESPONSE TIME: 24-48H
-                                </span>
-                            </p>
-                        </motion.div>
-                    </div>
+    const targetRef = useRef<HTMLDivElement | null>(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        // Start animating when the top of the section hits the top of the viewport
+        // Stop animating when the bottom of the section hits the bottom of the viewport
+        offset: ["start start", "end end"]
+    });
 
-                    {/* Right: List */}
-                    <div className="md:col-span-2">
-                        <FAQList />
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-}
+    // Maps scroll progress to vertical translation (Y axis).
+    // Starting low (+800px) and scrolling very high (-1400px) creates the sweeping effect.
+    const yMotionValue = useTransform(scrollYProgress, [0, 1], [800, -1400]);
 
-function FAQList() {
-    const FAQS = [
-        {
-            q: "Where are you based?",
-            a: "Da Nang, Vietnam. Built local, moving global."
-        },
-        {
-            q: "How do I order right now?",
-            a: "We’re mostly offline for now. Orders and questions are handled through the Contact section on this site."
-        },
-        {
-            q: "How’s the fit / sizing?",
-            a: "Relaxed silhouettes. If you’re unsure, share your height and weight and we’ll guide the fit."
-        },
-        {
-            q: "Do you ship?",
-            a: "Local first in Da Nang. Nationwide shipping depends on the drop."
-        },
-        {
-            q: "When are new drops?",
-            a: "Limited batches. Updates roll out through our channels."
-        },
-        {
-            q: "When is the online store launching?",
-            a: "Soon. No rush."
-        }
-    ];
+    // Combining the rotateX for perspective tilt and the interpolated Y translation
+    const transform = useMotionTemplate`rotateX(35deg) translateY(${yMotionValue}px) translateZ(10px)`;
 
     return (
-        <div className="flex flex-col border-t border-white/10">
-            {FAQS.map((faq, i) => (
-                <FAQItem key={i} question={faq.q} answer={faq.a} index={i} />
-            ))}
-        </div>
-    );
-}
-
-function FAQItem({ question, answer, index }: { question: string; answer: string, index: number }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const num = (index + 1).toString().padStart(2, '0');
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.05 }}
-            className="border-b border-white/10 group"
+        <section
+            ref={targetRef}
+            className="relative z-0 h-[350vh] w-full bg-background text-white border-grid-b"
+            id="faq"
         >
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-full py-8 flex items-start text-left hover:bg-white/5 transition-colors px-4 -mx-4 rounded-lg"
-                aria-expanded={isOpen}
+            {/* Scroll Indication Header */}
+            <div className="absolute left-1/2 top-[5%] grid -translate-x-1/2 content-start justify-items-center gap-4 text-center z-10 pointer-events-none">
+                <span className="relative max-w-[15ch] text-[10px] sm:text-xs uppercase tracking-[0.3em] leading-tight text-white/50 after:absolute after:left-1/2 after:top-full after:mt-4 after:h-16 after:w-px after:bg-gradient-to-b after:from-white/50 after:to-transparent after:content-['']">
+                    Scroll down to explore FAQ
+                </span>
+            </div>
+
+            {/* Sticky 3D Scene */}
+            <div
+                className="sticky top-0 mx-auto flex h-screen items-center justify-center bg-transparent overflow-hidden px-4 md:px-8"
+                style={{
+                    transformStyle: "preserve-3d",
+                    perspective: "600px", // Provides the depth illusion
+                }}
             >
-                {/* Numbering */}
-                <span className="font-sans text-xs text-white/30 pt-1.5 w-12 shrink-0 md:w-20 font-bold">
-                    {num}
-                </span>
-
-                {/* Question */}
-                <div className="flex-1 pr-8">
-                    <span className="font-display text-xl md:text-3xl font-bold uppercase tracking-tight text-white block group-hover:text-white/90 transition-colors">
-                        {question}
-                    </span>
-                </div>
-
-                {/* Toggle Icon */}
-                <span className="shrink-0 text-white/50 pt-1">
-                    {isOpen ? <Minus size={18} /> : <Plus size={18} />}
-                </span>
-            </button>
-
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        className="overflow-hidden"
-                    >
-                        <div className="pl-12 md:pl-20 pb-8 pr-6">
-                            <p className="font-sans text-base text-white/60 leading-relaxed max-w-md">
-                                {answer}
+                <motion.div
+                    style={{
+                        transformStyle: "preserve-3d",
+                        transform,
+                    }}
+                    className="w-full max-w-4xl text-center flex flex-col gap-16 sm:gap-24 pt-[40vh] pb-[40vh]"
+                >
+                    {FAQS.map((faq, index) => (
+                        <div key={index} className="flex flex-col gap-4 sm:gap-6">
+                            <h3 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white uppercase leading-[0.9] drop-shadow-2xl">
+                                {faq.q}
+                            </h3>
+                            <p className="font-sans text-xs sm:text-sm md:text-base lg:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed">
+                                {faq.a}
                             </p>
                         </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.div>
+                    ))}
+                </motion.div>
+
+                {/* Vertical Fade Gradients to obscure text smoothly as it enters/exits */}
+                <div className="absolute bottom-0 left-0 h-[30vh] w-full bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10" />
+                <div className="absolute top-0 left-0 h-[25vh] w-full bg-gradient-to-b from-background via-background/80 to-transparent pointer-events-none z-10" />
+            </div>
+        </section>
     );
 }

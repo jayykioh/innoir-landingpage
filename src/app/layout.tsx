@@ -25,13 +25,13 @@ const beVietnamPro = Be_Vietnam_Pro({
 export const metadata: Metadata = {
   title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
   description: "Discover INNOIR Streetwear, the premier local fashion brand in Da Nang, Vietnam. Authentic designs, premium quality, and the spirit of the night market. Est. 2025.",
-  keywords: ["streetwear Da Nang", 'innoir', 'innoir streetwear', "local brand Da Nang", "INNOIR", "Vietnam streetwear", "fashion Da Nang", "authentic streetwear", "night market fashion"],
+  keywords: ["streetwear Da Nang", 'innoir', 'innoir streetwear', "local brand Da Nang", "INNOIR", "Vietnam streetwear", "fashion Da Nang", "authentic streetwear", "D13 An Thuong 34", "An Thuong 34 Da Nang", "thời trang đường phố Đà Nẵng"],
   metadataBase: new URL("https://www.innoir.site"),
   openGraph: {
     title: "INNOIR Streetwear | Local Streetwear Brand in Da Nang",
     description: "INNOIR: Authentic Streetwear from Da Nang. Est. 2025. Redefining local fashion with bold designs and premium quality.",
     siteName: "INNOIR",
-    locale: "en_US",
+    locale: "vi_VN",
     type: "website",
     images: [
       {
@@ -72,17 +72,17 @@ const jsonLd = {
   "description": "Premier local streetwear brand in Da Nang, Vietnam.",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "An Thuong Night Market",
+    "streetAddress": "D13 An Thuong 34",
     "addressLocality": "Da Nang",
     "addressCountry": "VN"
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": 16.0544,
-    "longitude": 108.2022
+    "latitude": 16.049561,
+    "longitude": 108.244352
   },
   "url": "https://www.innoir.site",
-  "telephone": "+84905123456", // Placeholder, user can update
+  "telephone": "+84328244990",
   "priceRange": "$$",
   "openingHoursSpecification": [
     {
@@ -101,8 +101,7 @@ const jsonLd = {
     }
   ],
   "sameAs": [
-    "https://instagram.com/innoir.streetwear",
-    "https://facebook.com/jeckyoh"
+    "https://instagram.com/innoir.streetwear"
   ]
 };
 
@@ -112,7 +111,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${syne.variable} ${beVietnamPro.variable}`}>
+    <html lang="vi" className={`${inter.variable} ${syne.variable} ${beVietnamPro.variable}`}>
       <body className="bg-background text-foreground antialiased selection:bg-white selection:text-black">
         <script
           type="application/ld+json"

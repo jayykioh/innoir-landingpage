@@ -3,8 +3,8 @@ A Lead Creative Developer & UI/UX Expert specializing in Awwwards-winning Fashio
 
 **PROJECT CONTEXT:**
 Build a high-end landing page for **"INNOIR"** (Innoir.streetwear), a local luxury streetwear brand based in Da Nang, Vietnam.
-* **Owner:** Phu Nguyen.
-* **Location:** Night Market (Chợ đêm), An Thượng, Sơn Trà, Da Nang 50000.
+* **Owner:** Phu Nguyen - Luc Doan - Tai Nguyen.
+* **Location:** D13 An Thuong 34, Son Tra, Da Nang 50000.
 * **Socials:** Instagram (@innoir.streetwear).
 * **Vibe:** Modern Editorial, "Swiss Style", Underground, Authentic, Monochrome.
 * **Visual Reference:** Inspired by the "Moden" Framer Template (Magazine cover aesthetic, massive typography, depth effects, visible grid lines).
@@ -36,7 +36,7 @@ Build a high-end landing page for **"INNOIR"** (Innoir.streetwear), a local luxu
 * **Mobile Layout:** Use `h-[100dvh]` (Dynamic Viewport Height). Stack elements vertically or reduce parallax depth to ensure text readability.
 
 #### **B. INFINITE MARQUEE**
-* **Content:** "INNOIR © — STREETWEAR — CHỢ ĐÊM AN THƯỢNG — PHU NGUYEN — "
+* **Content:** "INNOIR © — STREETWEAR — D13 AN THUONG 34 — PHU NGUYEN - LUC DOAN - TAI NGUYEN — "
 * **Style:** Large outlined text scrolling continuously. Use `react-fast-marquee` or GSAP loop.
 
 #### **C. COLLECTIONS (Interactive Index)**
@@ -57,7 +57,7 @@ Build a high-end landing page for **"INNOIR"** (Innoir.streetwear), a local luxu
 
 #### **E. LOCATION (Footer)**
 * **Layout:** 2-Column Grid.
-* **Left:** Address info ("Night Market, An Thuong...").
+* **Left:** Address info ("D13 An Thuong 34...").
 * **Right:** **Custom Google Map**.
     * **Style:** MUST be **Grayscale/Dark Mode**. Remove default UI colors to match the site theme.
     * **UX:** Add `cooperative-gesture-handling` to prevent scroll trapping on mobile.

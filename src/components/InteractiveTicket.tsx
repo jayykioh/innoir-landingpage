@@ -209,7 +209,7 @@ export default function InteractiveTicket({
       className={`relative z-20 w-full flex flex-col items-center justify-start px-4 perspective-[1000px] ${
         previewMode 
           ? 'h-auto py-4 justify-center overflow-visible' 
-          : 'min-h-[100dvh] pt-20 pb-16 sm:justify-center sm:py-20 overflow-y-auto'
+          : 'min-h-[100dvh] pt-8 pb-[15vh] sm:justify-center sm:py-20 sm:pb-0 overflow-y-auto'
       }`}
       style={{ WebkitOverflowScrolling: 'touch' } as any}
     >
@@ -222,7 +222,8 @@ export default function InteractiveTicket({
             loop
             muted
             playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.15] z-0 pointer-events-none mix-blend-screen"
+            className="absolute inset-0 w-full h-full object-cover opacity-[0.15] z-0 pointer-events-none"
+            style={{ willChange: 'opacity' }}
           >
             <source src="/videos/grandopening.mp4" type="video/mp4" />
           </video>
