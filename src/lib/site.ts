@@ -30,6 +30,10 @@ export const siteConfig = {
       handle: "@innoir.store",
       url: "https://www.threads.com/@innoir.store",
     },
+    whatsapp: {
+      label: "WhatsApp",
+      url: "https://wa.me/84328244990",
+    },
   },
   ogImage: "/og-image.jpg",
   grandOpeningImage: "/photo/grandopening.jpg",
@@ -46,6 +50,7 @@ export const routes = {
   community: "/community",
   identity: "/identity",
   invitationCreate: "/invitation/create",
+  links: "/links",
 } as const;
 
 export function absoluteUrl(path = "/") {

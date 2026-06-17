@@ -82,7 +82,7 @@ export default function Hero() {
                 className="relative z-0 md:z-10 w-[90vw] md:w-[35vw] aspect-[3/4] grayscale contrast-125 opacity-50 md:opacity-100"
             >
                 <Image
-                    src="/photo/owner.jpg"
+                    src="/photo/banner.JPG"
                     alt="Innoir Founders"
                     fill
                     className="object-cover object-center"
